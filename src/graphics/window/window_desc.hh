@@ -20,6 +20,7 @@ struct WindowDesc {
   int refresh_rate = 60;
   int gl_version_major = 4;
   int gl_version_minor = 6;
+  bool borderless = false;
   int monitor = 0;
 
  public:
@@ -74,6 +75,11 @@ struct WindowDesc {
 
   inline WindowDesc& set_monitor(int m) {
     monitor = m;
+    return *this;
+  }
+
+  inline WindowDesc& set_borderless(bool b) {
+    borderless = b;
     return *this;
   }
 
