@@ -28,28 +28,6 @@ void Window::apply_hints() {
 void Window::make_current() { glfwMakeContextCurrent(window); };
 bool Window::is_active() { return window == glfwGetCurrentContext(); };
 
-Window::Window(Window&& other) noexcept
-    : desc(std::move(other.desc)),
-      window(other.window),
-      monitor(other.monitor) {
-  other.window = nullptr;
-  other.monitor = nullptr;
-}
-
-Window& Window::operator=(Window&& other) noexcept {
-  if (this != &other) {
-    if (window) {
-      glfwDestroyWindow(window);
-    }
-    desc = std::move(other.desc);
-    window = other.window;
-    monitor = other.monitor;
-    other.window = nullptr;
-    other.monitor = nullptr;
-  }
-  return *this;
-}
-
 util::Result<std::vector<GLFWmonitor*>, std::exception> Window::get_monitors(
     int preference /* = -1 */) {
   int monitor_count = 0;
@@ -118,7 +96,7 @@ util::Result<std::shared_ptr<Window>, std::exception> Window::init(
         std::runtime_error("Failed to create window"));
   }
 
-  window->activate();
+  window->make_current();
 
   glewExperimental = GL_TRUE;
   if (glewInit() != GLEW_OK) {
@@ -126,9 +104,16 @@ util::Result<std::shared_ptr<Window>, std::exception> Window::init(
         std::runtime_error("Failed to initialize GLEW"));
   }
 
+  window->renderer = std::make_shared<Renderer>(window);
+  window->callback_data =
+      std::make_shared<internal::CallbackData>(window, window->renderer);
+
+  glfwSetWindowUserPointer(window->window, window->callback_data.get());
+  glViewport(0, 0, desc.width, desc.height);
+
   return util::Result<std::shared_ptr<Window>, std::exception>::Ok(window);
 }
 
-Renderer Window::get_renderer() { return Renderer(get_this()); };
+std::shared_ptr<Renderer> Window::get_renderer() { return renderer; }
 
 }  // namespace kingom::graphics

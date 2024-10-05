@@ -7,6 +7,7 @@
 #include <memory>
 #include <vector>
 
+#include "graphics/callback.hh"
 #include "graphics/renderer.hh"
 #include "util/result.hh"
 #include "window_desc.hh"
@@ -14,11 +15,15 @@
 #define MAX -1
 
 namespace kingom::graphics {
-class Window : public std::enable_shared_from_this<Window> {
+class Window {
+  friend class Renderer;
+
  private:
   WindowDesc desc;
   GLFWwindow* window;
   GLFWmonitor* monitor;
+  std::shared_ptr<internal::CallbackData> callback_data;
+  std::shared_ptr<Renderer> renderer;
 
  private:
   void apply_hints();
@@ -28,22 +33,18 @@ class Window : public std::enable_shared_from_this<Window> {
   util::Result<std::vector<GLFWmonitor*>, std::exception> get_monitors(
       int preference = -1);
 
-  inline std::shared_ptr<Window> get_this() { return shared_from_this(); }
+  std::shared_ptr<internal::CallbackData> get_callback_data() {
+    return callback_data;
+  }
 
  public:
   Window() = default;
   ~Window();
 
-  Window(const Window&) = delete;
-  Window& operator=(const Window&) = delete;
-
-  Window(Window&& other) noexcept;
-  Window& operator=(Window&& other) noexcept;
-
   static util::Result<std::shared_ptr<Window>, std::exception> init(
       const WindowDesc& desc);
 
-  Renderer get_renderer();
+  std::shared_ptr<Renderer> get_renderer();
 
   inline void activate() {
     if (!is_active()) {
