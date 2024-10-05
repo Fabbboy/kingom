@@ -1,8 +1,10 @@
-#include "window.hh"
+
+#include "graphics/window/window.hh"
 
 #include <GLFW/glfw3.h>
 
-#include "window_desc.hh"
+#include "graphics/renderer.hh"
+#include "graphics/window/window_desc.hh"
 
 namespace kingom::graphics {
 Window::~Window() {
@@ -71,26 +73,26 @@ util::Result<std::vector<GLFWmonitor*>, std::exception> Window::get_monitors(
       std::move(result));
 }
 
-util::Result<std::unique_ptr<Window>, std::exception> Window::init(
+util::Result<std::shared_ptr<Window>, std::exception> Window::init(
     const WindowDesc& desc) {
   if (!glfwInit()) {
     throw std::runtime_error("Failed to initialize GLFW");
   }
 
-  auto window = std::make_unique<Window>();
+  auto window = std::make_shared<Window>();
   window->desc = desc;
   window->apply_hints();
 
   auto monitors = window->get_monitors(desc.monitor);
   if (monitors.is_err()) {
-    return util::Result<std::unique_ptr<Window>, std::exception>::Err(
+    return util::Result<std::shared_ptr<Window>, std::exception>::Err(
         std::runtime_error("Failed to get monitors"));
   }
 
   window->monitor = monitors.unwrap()[0];
   auto video_mode = glfwGetVideoMode(window->monitor);
   if (!video_mode) {
-    return util::Result<std::unique_ptr<Window>, std::exception>::Err(
+    return util::Result<std::shared_ptr<Window>, std::exception>::Err(
         std::runtime_error("Failed to get video mode"));
   }
 
@@ -112,14 +114,21 @@ util::Result<std::unique_ptr<Window>, std::exception> Window::init(
   }
 
   if (!window->window) {
-    return util::Result<std::unique_ptr<Window>, std::exception>::Err(
+    return util::Result<std::shared_ptr<Window>, std::exception>::Err(
         std::runtime_error("Failed to create window"));
   }
 
   window->activate();
 
-  return util::Result<std::unique_ptr<Window>, std::exception>::Ok(
-      std::move(window));
+  glewExperimental = GL_TRUE;
+  if (glewInit() != GLEW_OK) {
+    return util::Result<std::shared_ptr<Window>, std::exception>::Err(
+        std::runtime_error("Failed to initialize GLEW"));
+  }
+
+  return util::Result<std::shared_ptr<Window>, std::exception>::Ok(window);
 }
+
+Renderer Window::get_renderer() { return Renderer(get_this()); };
 
 }  // namespace kingom::graphics

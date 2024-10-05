@@ -1,8 +1,6 @@
 #ifndef KINGOM_GRAPHICS_WINDOW_DESC_HH
 #define KINGOM_GRAPHICS_WINDOW_DESC_HH
 
-#include <GLFW/glfw3.h>
-
 #include <exception>
 #include <memory>
 
@@ -83,7 +81,7 @@ struct WindowDesc {
     return *this;
   }
 
-  util::Result<std::unique_ptr<Window>, std::exception> build() const;
+  util::Result<std::shared_ptr<Window>, std::exception> build() const;
 };
 
 }  // namespace kingom::graphics

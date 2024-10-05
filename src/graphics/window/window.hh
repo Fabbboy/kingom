@@ -1,18 +1,20 @@
 #ifndef KINGOM_GRAPHICS_WINDOW_HH
 #define KINGOM_GRAPHICS_WINDOW_HH
 
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
 #include <memory>
 #include <vector>
 
+#include "graphics/renderer.hh"
 #include "util/result.hh"
 #include "window_desc.hh"
 
 #define MAX -1
 
 namespace kingom::graphics {
-class Window {
+class Window : public std::enable_shared_from_this<Window> {
  private:
   WindowDesc desc;
   GLFWwindow* window;
@@ -26,6 +28,8 @@ class Window {
   util::Result<std::vector<GLFWmonitor*>, std::exception> get_monitors(
       int preference = -1);
 
+  inline std::shared_ptr<Window> get_this() { return shared_from_this(); }
+
  public:
   Window() = default;
   ~Window();
@@ -36,8 +40,10 @@ class Window {
   Window(Window&& other) noexcept;
   Window& operator=(Window&& other) noexcept;
 
-  static util::Result<std::unique_ptr<Window>, std::exception> init(
+  static util::Result<std::shared_ptr<Window>, std::exception> init(
       const WindowDesc& desc);
+
+  Renderer get_renderer();
 
   inline void activate() {
     if (!is_active()) {
@@ -45,14 +51,11 @@ class Window {
     }
   }
 
+  inline GLFWwindow* get_window() { return window; }
+
   inline void poll_events() { glfwPollEvents(); }
-  inline void swap_buffers() { glfwSwapBuffers(window); }
   inline bool should_close() { return glfwWindowShouldClose(window); }
   inline void close() { glfwSetWindowShouldClose(window, GLFW_TRUE); }
-  inline void clear() {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-  }
 };
 }  // namespace kingom::graphics
 

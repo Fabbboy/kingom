@@ -14,13 +14,12 @@ int main() {
   }
 
   auto window = result.unwrap();
+  auto renderer = window->get_renderer();
 
   while (!window->should_close()) {
     window->poll_events();
-    window->clear();
-    window->swap_buffers();
+    renderer.update();
   }
 
-  std::cout << "Exiting program..." << std::endl;
   return 0;
 }
