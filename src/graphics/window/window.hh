@@ -53,6 +53,9 @@ class Window {
   }
 
   inline GLFWwindow* get_window() { return window; }
+  inline std::pair<int, int> get_size(){
+    return std::make_pair(desc.width, desc.height);
+  }
 
   inline void poll_events() { glfwPollEvents(); }
   inline bool should_close() { return glfwWindowShouldClose(window); }

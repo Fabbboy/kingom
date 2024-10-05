@@ -23,6 +23,7 @@ void Window::apply_hints() {
   glfwWindowHint(GLFW_REFRESH_RATE, desc.refresh_rate);
   glfwWindowHint(GLFW_RESIZABLE, desc.resizable ? GLFW_TRUE : GLFW_FALSE);
   glfwWindowHint(GLFW_DECORATED, desc.borderless ? GLFW_FALSE : GLFW_TRUE);
+  glfwWindowHint(GLFW_DEPTH_BITS, 24);
 };
 
 void Window::make_current() { glfwMakeContextCurrent(window); };
@@ -97,6 +98,9 @@ util::Result<std::shared_ptr<Window>, std::exception> Window::init(
   }
 
   window->make_current();
+
+  glEnable(GL_DEPTH_TEST);
+  glEnable(GL_LESS);
 
   glewExperimental = GL_TRUE;
   if (glewInit() != GLEW_OK) {
