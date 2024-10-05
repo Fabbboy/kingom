@@ -6,3 +6,4 @@ build
 win-build
 out
 compile_commands.json
+vcpkg_installed
