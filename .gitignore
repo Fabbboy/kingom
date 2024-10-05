@@ -1,5 +1,8 @@
+.vs
 .cache
 .vscode
 .idea
 build
+win-build
+out
 compile_commands.json
