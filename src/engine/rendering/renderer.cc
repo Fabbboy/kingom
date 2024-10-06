@@ -1,10 +1,10 @@
-#include "graphics/rendering/renderer.hh"
+#include "engine/rendering/renderer.hh"
 
 #include <iostream>
 
-#include "graphics/window/window.hh"
+#include "engine/window/window.hh"
 
-namespace kingom::graphics {
+namespace kingom::engine {
 Renderer::Renderer(std::shared_ptr<Window> window) : window(window) {
   glfwSetFramebufferSizeCallback(window->get_window(),
                                  framebuffer_size_callback);
@@ -30,4 +30,4 @@ void Renderer::clear() {
 };
 
 void Renderer::swap() { glfwSwapBuffers(window->get_window()); };
-}  // namespace kingom::graphics
+}  // namespace kingom::engine

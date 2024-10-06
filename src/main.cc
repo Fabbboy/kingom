@@ -1,9 +1,9 @@
 #include <iostream>
 #include <sstream>
 
-#include "graphics/rendering/shader.hh"
-#include "graphics/window/window.hh"
-#include "graphics/window/window_desc.hh"
+#include "engine/rendering/shader.hh"
+#include "engine/window/window.hh"
+#include "engine/window/window_desc.hh"
 
 static void glfwErrorCallback(int error, const char* description) {
   std::cerr << "GLFW Error: " << description << std::endl;
@@ -12,7 +12,7 @@ static void glfwErrorCallback(int error, const char* description) {
 int main() {
   glfwSetErrorCallback(glfwErrorCallback);
   auto result =
-      kingom::graphics::WindowDesc().set_width(800).set_height(600).build();
+      kingom::engine::WindowDesc().set_width(800).set_height(600).build();
 
   if (result.is_err()) {
     std::cerr << "Failed to create window: " << result.unwrap_err().what()
@@ -41,7 +41,7 @@ int main() {
     }
   )");
 
-  auto shader = kingom::graphics::Shader::create(vertexShader, fragmentShader);
+  auto shader = kingom::engine::Shader::create(vertexShader, fragmentShader);
 
   if (shader.is_err()) {
     std::cerr << "Failed to create shader: " << shader.unwrap_err().what()

@@ -1,8 +1,8 @@
-#include "graphics/rendering/shader.hh"
+#include "engine/rendering/shader.hh"
 
 #include <istream>
 
-namespace kingom::graphics {
+namespace kingom::engine {
 
 util::Result<void, std::exception> Shader::compile_shader(unsigned int id,
                                                           std::string source) {
@@ -115,4 +115,4 @@ void Shader::set_mat4(const std::string& name, const glm::mat4& value) {
                      GL_FALSE, &value[0][0]);
 };
 
-}  // namespace kingom::graphics
+}  // namespace kingom::engine

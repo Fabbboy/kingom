@@ -2,7 +2,7 @@
 #define KINGOM_GRAPHICS_CALLBACK_HH
 #include <memory>
 
-namespace kingom::graphics {
+namespace kingom::engine {
 class Window;
 class Renderer;
 namespace internal {
@@ -16,6 +16,6 @@ struct CallbackData {
       : window(window), renderer(renderer) {}
 };
 }  // namespace internal
-}  // namespace kingom::graphics
+}  // namespace kingom::engine
 
 #endif

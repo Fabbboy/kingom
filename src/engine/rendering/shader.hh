@@ -9,7 +9,7 @@
 
 #include "util/result.hh"
 
-namespace kingom::graphics {
+namespace kingom::engine {
 class Shader {
  private:
   unsigned int program_id;
@@ -46,6 +46,6 @@ class Shader {
 
   inline unsigned int get_id() { return program_id; }
 };
-}  // namespace kingom::graphics
+}  // namespace kingom::engine
 
 #endif

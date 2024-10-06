@@ -7,14 +7,14 @@
 #include <memory>
 #include <vector>
 
-#include "graphics/callback.hh"
-#include "graphics/rendering/renderer.hh"
+#include "engine/callback.hh"
+#include "engine/rendering/renderer.hh"
 #include "util/result.hh"
 #include "window_desc.hh"
 
 #define MAX -1
 
-namespace kingom::graphics {
+namespace kingom::engine {
 class Window {
   friend class Renderer;
 
@@ -57,6 +57,6 @@ class Window {
   inline bool should_close() { return glfwWindowShouldClose(window); }
   inline void close() { glfwSetWindowShouldClose(window, GLFW_TRUE); }
 };
-}  // namespace kingom::graphics
+}  // namespace kingom::engine
 
 #endif  // KINGOM_GRAPHICS_WINDOW_HH

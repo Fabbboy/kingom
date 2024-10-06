@@ -1,12 +1,12 @@
 
-#include "graphics/window/window.hh"
+#include "engine/window/window.hh"
 
 #include <GLFW/glfw3.h>
 
-#include "graphics/rendering/renderer.hh"
-#include "graphics/window/window_desc.hh"
+#include "engine/rendering/renderer.hh"
+#include "engine/window/window_desc.hh"
 
-namespace kingom::graphics {
+namespace kingom::engine {
 Window::~Window() {
   if (window) {
     glfwDestroyWindow(window);
@@ -126,4 +126,4 @@ util::Result<std::shared_ptr<Window>, std::exception> Window::init(
 
 std::shared_ptr<Renderer> Window::get_renderer() { return renderer; }
 
-}  // namespace kingom::graphics
+}  // namespace kingom::engine

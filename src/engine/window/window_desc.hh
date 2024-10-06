@@ -6,7 +6,7 @@
 
 #include "util/result.hh"
 
-namespace kingom::graphics {
+namespace kingom::engine {
 class Window;
 struct WindowDesc {
  public:
@@ -84,6 +84,6 @@ struct WindowDesc {
   util::Result<std::shared_ptr<Window>, std::exception> build() const;
 };
 
-}  // namespace kingom::graphics
+}  // namespace kingom::engine
 
 #endif  // KINGOM_GRAPHICS_WINDOW_DESC_HH

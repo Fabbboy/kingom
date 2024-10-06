@@ -6,7 +6,7 @@
 #include <glm/glm.hpp>
 #include <memory>
 
-namespace kingom::graphics {
+namespace kingom::engine {
 class Window;
 class Renderer {
  private:
@@ -24,5 +24,5 @@ class Renderer {
   void clear();
   inline void set_ccolor(glm::vec4 color) { ccolor = color; };
 };
-}  // namespace kingom::graphics
+}  // namespace kingom::engine
 #endif
