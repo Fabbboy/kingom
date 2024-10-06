@@ -1,5 +1,7 @@
 #include <iostream>
+#include <sstream>
 
+#include "graphics/shader.hh"
 #include "graphics/window/window.hh"
 #include "graphics/window/window_desc.hh"
 
@@ -20,6 +22,32 @@ int main() {
 
   auto window = result.unwrap();
   auto renderer = window->get_renderer();
+
+  std::stringstream vertexShader(
+      R"(
+    #version 460 core
+    layout (location = 0) in vec3 aPos;
+    void main() {
+      gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
+    }
+  )");
+
+  std::stringstream fragmentShader(
+      R"(
+    #version 460 core
+    out vec4 FragColor;
+    void main() {
+      FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
+    }
+  )");
+
+  auto shader = kingom::graphics::Shader::create(vertexShader, fragmentShader);
+
+  if (shader.is_err()) {
+    std::cerr << "Failed to create shader: " << shader.unwrap_err().what()
+              << std::endl;
+    return -1;
+  }
 
   while (!window->should_close()) {
     window->poll_events();
