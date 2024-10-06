@@ -23,32 +23,17 @@ void Window::apply_hints() {
   glfwWindowHint(GLFW_REFRESH_RATE, desc.refresh_rate);
   glfwWindowHint(GLFW_RESIZABLE, desc.resizable ? GLFW_TRUE : GLFW_FALSE);
   glfwWindowHint(GLFW_DECORATED, desc.borderless ? GLFW_FALSE : GLFW_TRUE);
+  glfwWindowHint(GLFW_DEPTH_BITS, 24);
+};
+
+void Window::activate() {
+  if (!is_active()) {
+    make_current();
+  }
 };
 
 void Window::make_current() { glfwMakeContextCurrent(window); };
 bool Window::is_active() { return window == glfwGetCurrentContext(); };
-
-Window::Window(Window&& other) noexcept
-    : desc(std::move(other.desc)),
-      window(other.window),
-      monitor(other.monitor) {
-  other.window = nullptr;
-  other.monitor = nullptr;
-}
-
-Window& Window::operator=(Window&& other) noexcept {
-  if (this != &other) {
-    if (window) {
-      glfwDestroyWindow(window);
-    }
-    desc = std::move(other.desc);
-    window = other.window;
-    monitor = other.monitor;
-    other.window = nullptr;
-    other.monitor = nullptr;
-  }
-  return *this;
-}
 
 util::Result<std::vector<GLFWmonitor*>, std::exception> Window::get_monitors(
     int preference /* = -1 */) {
@@ -118,7 +103,10 @@ util::Result<std::shared_ptr<Window>, std::exception> Window::init(
         std::runtime_error("Failed to create window"));
   }
 
-  window->activate();
+  window->make_current();
+
+  glEnable(GL_DEPTH_TEST);
+  glEnable(GL_LESS);
 
   glewExperimental = GL_TRUE;
   if (glewInit() != GLEW_OK) {
@@ -126,9 +114,16 @@ util::Result<std::shared_ptr<Window>, std::exception> Window::init(
         std::runtime_error("Failed to initialize GLEW"));
   }
 
+  window->renderer = std::make_shared<Renderer>(window);
+  window->callback_data =
+      std::make_shared<internal::CallbackData>(window, window->renderer);
+
+  glfwSetWindowUserPointer(window->window, window->callback_data.get());
+  glViewport(0, 0, desc.width, desc.height);
+
   return util::Result<std::shared_ptr<Window>, std::exception>::Ok(window);
 }
 
-Renderer Window::get_renderer() { return Renderer(get_this()); };
+std::shared_ptr<Renderer> Window::get_renderer() { return renderer; }
 
 }  // namespace kingom::graphics

@@ -3,9 +3,14 @@
 #include "graphics/window/window.hh"
 #include "graphics/window/window_desc.hh"
 
+static void glfwErrorCallback(int error, const char* description) {
+  std::cerr << "GLFW Error: " << description << std::endl;
+}
+
 int main() {
+  glfwSetErrorCallback(glfwErrorCallback);
   auto result =
-      kingom::graphics::WindowDesc().set_width(MAX).set_height(MAX).build();
+      kingom::graphics::WindowDesc().set_width(800).set_height(600).build();
 
   if (result.is_err()) {
     std::cerr << "Failed to create window: " << result.unwrap_err().what()
@@ -18,7 +23,8 @@ int main() {
 
   while (!window->should_close()) {
     window->poll_events();
-    renderer.update();
+    renderer->clear();
+    renderer->swap();
   }
 
   return 0;
