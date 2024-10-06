@@ -1,6 +1,7 @@
 #include <iostream>
 #include <sstream>
 
+#include "engine/object/texture.hh"
 #include "engine/rendering/shader.hh"
 #include "engine/window/window.hh"
 #include "engine/window/window_desc.hh"
@@ -42,6 +43,8 @@ int main() {
   )");
 
   auto shader = kingom::engine::Shader::create(vertexShader, fragmentShader);
+
+  auto tex = kingom::engine::Texture::create(glm::vec4(1.0f, 0.5f, 0.2f, 1.0f));
 
   if (shader.is_err()) {
     std::cerr << "Failed to create shader: " << shader.unwrap_err().what()

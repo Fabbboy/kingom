@@ -1,4 +1,0 @@
-#ifndef KINGOM_ENGINE_MATERIAL_HH
-#define KINGOM_ENGINE_MATERIAL_HH
-
-#endif
