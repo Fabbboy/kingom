@@ -23,7 +23,7 @@ int main() {
 
   while (!window->should_close()) {
     window->poll_events();
-    renderer->update();
+    renderer->clear();
     renderer->swap();
   }
 

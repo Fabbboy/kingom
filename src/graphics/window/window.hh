@@ -46,14 +46,10 @@ class Window {
 
   std::shared_ptr<Renderer> get_renderer();
 
-  inline void activate() {
-    if (!is_active()) {
-      make_current();
-    }
-  }
+  void activate();
 
   inline GLFWwindow* get_window() { return window; }
-  inline std::pair<int, int> get_size(){
+  inline std::pair<int, int> get_size() {
     return std::make_pair(desc.width, desc.height);
   }
 

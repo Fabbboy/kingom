@@ -26,6 +26,12 @@ void Window::apply_hints() {
   glfwWindowHint(GLFW_DEPTH_BITS, 24);
 };
 
+void Window::activate() {
+  if (!is_active()) {
+    make_current();
+  }
+};
+
 void Window::make_current() { glfwMakeContextCurrent(window); };
 bool Window::is_active() { return window == glfwGetCurrentContext(); };
 

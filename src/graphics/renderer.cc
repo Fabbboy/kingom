@@ -22,7 +22,7 @@ void Renderer::framebuffer_size_callback(GLFWwindow* window, int width,
   win->desc.width = width;
   win->desc.height = height;
 };
-void Renderer::update() {
+void Renderer::clear() {
   window->activate();
   auto win = window->get_window();
   glClearColor(ccolor.r, ccolor.g, ccolor.b, ccolor.a);

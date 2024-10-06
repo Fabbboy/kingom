@@ -21,7 +21,8 @@ class Renderer {
   Renderer(std::shared_ptr<Window> window);
 
   void swap();
-  void update();
+  void clear();
+  inline void set_ccolor(glm::vec4 color) { ccolor = color; };
 };
 }  // namespace kingom::graphics
 #endif
