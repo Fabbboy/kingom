@@ -1,5 +1,5 @@
-#ifndef KINGOM_GRAPHICS_SHADER_HH
-#define KINGOM_GRAPHICS_SHADER_HH
+#ifndef KINGOM_ENGINE_SHADER_HH
+#define KINGOM_ENGINE_SHADER_HH
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>

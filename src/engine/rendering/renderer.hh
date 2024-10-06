@@ -1,5 +1,5 @@
-#ifndef KINGOM_GRAPHICS_RENDERER_HH
-#define KINGOM_GRAPHICS_RENDERER_HH
+#ifndef KINGOM_ENGINE_RENDERER_HH
+#define KINGOM_ENGINE_RENDERER_HH
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 

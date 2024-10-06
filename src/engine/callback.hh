@@ -1,5 +1,5 @@
-#ifndef KINGOM_GRAPHICS_CALLBACK_HH
-#define KINGOM_GRAPHICS_CALLBACK_HH
+#ifndef KINGOM_ENGINE_CALLBACK_HH
+#define KINGOM_ENGINE_CALLBACK_HH
 #include <memory>
 
 namespace kingom::engine {

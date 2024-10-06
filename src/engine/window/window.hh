@@ -1,5 +1,5 @@
-#ifndef KINGOM_GRAPHICS_WINDOW_HH
-#define KINGOM_GRAPHICS_WINDOW_HH
+#ifndef KINGOM_ENGINE_WINDOW_HH
+#define KINGOM_ENGINE_WINDOW_HH
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -59,4 +59,4 @@ class Window {
 };
 }  // namespace kingom::engine
 
-#endif  // KINGOM_GRAPHICS_WINDOW_HH
+#endif  // KINGOM_ENGINE_WINDOW_HH

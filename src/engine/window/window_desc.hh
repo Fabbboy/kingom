@@ -1,5 +1,5 @@
-#ifndef KINGOM_GRAPHICS_WINDOW_DESC_HH
-#define KINGOM_GRAPHICS_WINDOW_DESC_HH
+#ifndef KINGOM_ENGINE_WINDOW_DESC_HH
+#define KINGOM_ENGINE_WINDOW_DESC_HH
 
 #include <exception>
 #include <memory>
@@ -86,4 +86,4 @@ struct WindowDesc {
 
 }  // namespace kingom::engine
 
-#endif  // KINGOM_GRAPHICS_WINDOW_DESC_HH
+#endif  // KINGOM_ENGINE_WINDOW_DESC_HH
