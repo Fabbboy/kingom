@@ -1,7 +1,7 @@
 #include <iostream>
 #include <sstream>
 
-#include "graphics/shader.hh"
+#include "graphics/rendering/shader.hh"
 #include "graphics/window/window.hh"
 #include "graphics/window/window_desc.hh"
 

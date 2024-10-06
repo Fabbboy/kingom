@@ -3,7 +3,7 @@
 
 #include <GLFW/glfw3.h>
 
-#include "graphics/renderer.hh"
+#include "graphics/rendering/renderer.hh"
 #include "graphics/window/window_desc.hh"
 
 namespace kingom::graphics {

@@ -8,7 +8,7 @@
 #include <vector>
 
 #include "graphics/callback.hh"
-#include "graphics/renderer.hh"
+#include "graphics/rendering/renderer.hh"
 #include "util/result.hh"
 #include "window_desc.hh"
 

@@ -1,4 +1,4 @@
-#include "graphics/shader.hh"
+#include "graphics/rendering/shader.hh"
 
 #include <istream>
 
