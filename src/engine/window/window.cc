@@ -105,14 +105,15 @@ util::Result<std::shared_ptr<Window>, std::exception> Window::init(
 
   window->make_current();
 
-  glEnable(GL_DEPTH_TEST);
-  glEnable(GL_LESS);
-
   glewExperimental = GL_TRUE;
   if (glewInit() != GLEW_OK) {
     return util::Result<std::shared_ptr<Window>, std::exception>::Err(
         std::runtime_error("Failed to initialize GLEW"));
   }
+
+  glEnable(GL_DEPTH_TEST);  
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
   window->renderer = std::make_shared<Renderer>(window);
   window->callback_data =

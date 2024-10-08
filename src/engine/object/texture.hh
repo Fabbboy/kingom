@@ -67,8 +67,8 @@ class Texture {
                                                       TextureFilter filter = TextureFilter::LINEAR);
   inline GLuint get_id() { return id; }
 
-  inline void bind() { glBindTexture(static_cast<GLenum>(texture_type), id); }
-  inline void unbind() { glBindTexture(static_cast<GLenum>(texture_type), 0); }
+  void bind(GLenum textureUnit = GL_TEXTURE0);
+  void unbind();
 };
 }  // namespace kingom::engine
 
