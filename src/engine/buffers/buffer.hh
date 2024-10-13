@@ -4,7 +4,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-namespace kingom::engine::internal {
+namespace kingom::engine {
 enum class BufferType {
   Vertex = GL_ARRAY_BUFFER,
   Index = GL_ELEMENT_ARRAY_BUFFER,

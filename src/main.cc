@@ -92,16 +92,16 @@ int main() {
       -0.5f, 0.5f,  0.0f, 0.0f, 1.0f   // top left
   };
 
-  kingom::engine::internal::Buffer vertex_buffer(
-      kingom::engine::internal::BufferType::Vertex);
+  kingom::engine::Buffer vertex_buffer(
+      kingom::engine::BufferType::Vertex);
 
   unsigned int indices[] = {
       0, 1, 3,  // first triangle
       1, 2, 3   // second triangle
   };
 
-  kingom::engine::internal::Buffer index_buffer(
-      kingom::engine::internal::BufferType::Index);
+  kingom::engine::Buffer index_buffer(
+      kingom::engine::BufferType::Index);
 
   unsigned int VBO, VAO, EBO;
   glGenVertexArrays(1, &VAO);

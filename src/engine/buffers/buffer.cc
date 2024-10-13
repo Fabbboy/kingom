@@ -1,6 +1,6 @@
 #include "engine/buffers/buffer.hh"
 
-namespace kingom::engine::internal {
+namespace kingom::engine {
 Buffer::Buffer(BufferType type) : type(type) { glGenBuffers(1, &id); }
 Buffer::~Buffer() { glDeleteBuffers(1, &id); }
 
