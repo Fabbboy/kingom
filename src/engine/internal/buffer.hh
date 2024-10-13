@@ -32,6 +32,7 @@ class Buffer {
   void unbind();
 
   inline GLuint get_id() { return id; };
+  inline BufferType get_type() { return type; };
 
   template <typename T>
   void set_data(size_t size, T* data, DrawMode mode = DrawMode::Static) {
