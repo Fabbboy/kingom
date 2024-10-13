@@ -74,6 +74,8 @@ class Texture {
   void bind(GLenum textureUnit = GL_TEXTURE0);
   void unbind();
 };
+
+typedef std::shared_ptr<Texture> TexturePtr;
 }  // namespace kingom::engine
 
 #endif

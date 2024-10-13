@@ -49,32 +49,32 @@ Shader::~Shader() {
     glDeleteProgram(program_id);
   }
 }
-util::Result<std::shared_ptr<Shader>, std::exception> Shader::create(
+util::Result<ShaderPtr, std::exception> Shader::create(
     std::string vertex_shader, std::string fragment_shader) {
-  std::shared_ptr<Shader> shader = std::make_shared<Shader>();
+  ShaderPtr shader = std::make_shared<Shader>();
   shader->program_id = glCreateProgram();
   shader->vertex_id = glCreateShader(GL_VERTEX_SHADER);
   shader->fragment_id = glCreateShader(GL_FRAGMENT_SHADER);
 
   auto result = shader->compile_shader(shader->vertex_id, vertex_shader);
   if (result.is_err()) {
-    return util::Result<std::shared_ptr<Shader>, std::exception>::Err(result.unwrap_err());
+    return util::Result<ShaderPtr, std::exception>::Err(result.unwrap_err());
   }
 
   result = shader->compile_shader(shader->fragment_id, fragment_shader);
   if (result.is_err()) {
-    return util::Result<std::shared_ptr<Shader>, std::exception>::Err(result.unwrap_err());
+    return util::Result<ShaderPtr, std::exception>::Err(result.unwrap_err());
   }
 
   result = shader->link_program();
   if (result.is_err()) {
-    return util::Result<std::shared_ptr<Shader>, std::exception>::Err(result.unwrap_err());
+    return util::Result<ShaderPtr, std::exception>::Err(result.unwrap_err());
   }
 
-  return util::Result<std::shared_ptr<Shader>, std::exception>::Ok(shader);
+  return util::Result<ShaderPtr, std::exception>::Ok(shader);
 };
 
-util::Result<std::shared_ptr<Shader>, std::exception> Shader::create(
+util::Result<ShaderPtr, std::exception> Shader::create(
     std::istream& vertex_shader, std::istream& fragment_shader) {
   std::string vertex_src((std::istreambuf_iterator<char>(vertex_shader)),
                          std::istreambuf_iterator<char>());

@@ -4,7 +4,7 @@
 #include <iostream>
 #include <sstream>
 
-#include "engine/object/texture.hh"
+#include "engine/geometry/texture.hh"
 #include "engine/rendering/shader.hh"
 #include "engine/window/window.hh"
 #include "engine/window/window_desc.hh"

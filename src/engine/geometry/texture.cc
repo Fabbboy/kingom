@@ -1,4 +1,4 @@
-#include "engine/object/texture.hh"
+#include "engine/geometry/texture.hh"
 
 #include <iostream>
 #include <stdexcept>
@@ -89,10 +89,10 @@ void Texture::create_texture() {
   glBindTexture(static_cast<GLenum>(texture_type), 0);
 }
 
-util::Result<std::shared_ptr<Texture>, std::exception> Texture::create(
+util::Result<TexturePtr, std::exception> Texture::create(
     std::string path, bool flip, ColorType color_type, TextureType texture_type,
     TextureWrapping wrapping, TextureFilter filter) {
-  std::shared_ptr<Texture> texture = std::make_shared<Texture>();
+  TexturePtr texture = std::make_shared<Texture>();
   texture->color_type = color_type;
   texture->texture_type = texture_type;
   texture->wrapping = wrapping;
@@ -100,18 +100,18 @@ util::Result<std::shared_ptr<Texture>, std::exception> Texture::create(
 
   auto result = texture->load_image(path, flip);
   if (result.is_err()) {
-    return util::Result<std::shared_ptr<Texture>, std::exception>::Err(
+    return util::Result<TexturePtr, std::exception>::Err(
         result.unwrap_err());
   }
 
   texture->create_texture();
 
-  return util::Result<std::shared_ptr<Texture>, std::exception>::Ok(texture);
+  return util::Result<TexturePtr, std::exception>::Ok(texture);
 }
 
-util::Result<std::shared_ptr<Texture>, std::exception> Texture::create(
+util::Result<TexturePtr, std::exception> Texture::create(
     glm::vec4 color, TextureWrapping wrapping, TextureFilter filter) {
-  std::shared_ptr<Texture> texture = std::make_shared<Texture>();
+  TexturePtr texture = std::make_shared<Texture>();
   texture->color_type = ColorType::RGBA;
   texture->texture_type = TextureType::TEXTURE_2D;
   texture->wrapping = wrapping;
@@ -133,7 +133,7 @@ util::Result<std::shared_ptr<Texture>, std::exception> Texture::create(
     std::exit(1);
   }
 
-  return util::Result<std::shared_ptr<Texture>, std::exception>::Ok(texture);
+  return util::Result<TexturePtr, std::exception>::Ok(texture);
 }
 
 Texture::~Texture() { glDeleteTextures(1, &id); }

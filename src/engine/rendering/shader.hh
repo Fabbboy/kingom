@@ -47,6 +47,7 @@ class Shader {
 
   inline unsigned int get_id() { return program_id; }
 };
+typedef std::shared_ptr<Shader> ShaderPtr;
 }  // namespace kingom::engine
 
 #endif
