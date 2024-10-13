@@ -5,7 +5,7 @@
 #include <sstream>
 
 #include "engine/geometry/texture.hh"
-#include "engine/internal/buffer.hh"
+#include "engine/buffers/buffer.hh"
 #include "engine/rendering/shader.hh"
 #include "engine/window/window.hh"
 #include "engine/window/window_desc.hh"

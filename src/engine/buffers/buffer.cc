@@ -1,4 +1,4 @@
-#include "engine/internal/buffer.hh"
+#include "engine/buffers/buffer.hh"
 
 namespace kingom::engine::internal {
 Buffer::Buffer(BufferType type) : type(type) { glGenBuffers(1, &id); }
