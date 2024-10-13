@@ -5,6 +5,7 @@
 #include <sstream>
 
 #include "engine/geometry/texture.hh"
+#include "engine/internal/buffer.hh"
 #include "engine/rendering/shader.hh"
 #include "engine/window/window.hh"
 #include "engine/window/window_desc.hh"
@@ -33,7 +34,6 @@ int main() {
               << std::endl;
     return -1;
   }
-  std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
 
   auto window = result.unwrap();
   window->activate();
@@ -76,8 +76,6 @@ int main() {
   }
   auto shader = ret_shader.unwrap();
 
-  /*  auto tex_ret =
-       kingom::engine::Texture::create(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f)); */
   auto tex_ret = kingom::engine::Texture::create("../assets/codeScreen.png");
   if (tex_ret.is_err()) {
     std::cerr << "Failed to create texture: " << tex_ret.unwrap_err().what()
@@ -94,24 +92,23 @@ int main() {
       -0.5f, 0.5f,  0.0f, 0.0f, 1.0f   // top left
   };
 
+  kingom::engine::internal::Buffer vertex_buffer(
+      kingom::engine::internal::BufferType::Vertex);
+
   unsigned int indices[] = {
       0, 1, 3,  // first triangle
       1, 2, 3   // second triangle
   };
 
+  kingom::engine::internal::Buffer index_buffer(
+      kingom::engine::internal::BufferType::Index);
+
   unsigned int VBO, VAO, EBO;
   glGenVertexArrays(1, &VAO);
-  glGenBuffers(1, &VBO);
-  glGenBuffers(1, &EBO);
-
   glBindVertexArray(VAO);
 
-  glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices,
-               GL_STATIC_DRAW);
+  vertex_buffer.set_data(sizeof(vertices), vertices);
+  index_buffer.set_data(sizeof(indices), indices);
 
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
   glEnableVertexAttribArray(0);
@@ -119,8 +116,6 @@ int main() {
   glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
                         (void*)(3 * sizeof(float)));
   glEnableVertexAttribArray(1);
-
-  check_gl_errors("Initial Setup");
 
   while (!window->should_close()) {
     window->poll_events();

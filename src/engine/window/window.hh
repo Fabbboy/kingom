@@ -7,7 +7,7 @@
 #include <memory>
 #include <vector>
 
-#include "engine/callback.hh"
+#include "engine/internal/callback.hh"
 #include "engine/rendering/renderer.hh"
 #include "util/result.hh"
 #include "window_desc.hh"
