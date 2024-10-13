@@ -5,6 +5,7 @@
 #include <GLFW/glfw3.h>
 
 #include <glm/glm.hpp>
+#include <memory>
 #include <string>
 
 #include "util/result.hh"
@@ -26,10 +27,10 @@ class Shader {
   Shader() = default;
   ~Shader();
 
-  static util::Result<Shader, std::exception> create(
+  static util::Result<std::shared_ptr<Shader>, std::exception> create(
       std::string vertex_shader, std::string fragment_shader);
 
-  static util::Result<Shader, std::exception> create(
+  static util::Result<std::shared_ptr<Shader>, std::exception> create(
       std::istream& vertex_shader, std::istream& fragment_shader);
 
   inline void use() { glUseProgram(program_id); }
