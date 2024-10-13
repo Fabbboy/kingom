@@ -5,8 +5,10 @@
 #include <GLFW/glfw3.h>
 
 #include <glm/glm.hpp>
-#include "util/result.hh"
+#include <memory>
 #include <vector>
+
+#include "util/result.hh"
 
 namespace kingom::engine {
 enum class ColorType {
@@ -49,26 +51,28 @@ class Texture {
   TextureFilter filter;
 
  private:
-  util::Result<void, std::exception> load_image(std::string path);
+  util::Result<void, std::exception> load_image(std::string path,
+                                                bool flip = true);
   void create_texture();
 
  public:
   Texture() = default;
   ~Texture();
 
-  static util::Result<Texture, std::exception> create(std::string path,
-                                                      ColorType color_type = ColorType::INFER,
-                                                      TextureType texture_type = TextureType::TEXTURE_2D,
-                                                      TextureWrapping wrapping = TextureWrapping::REPEAT,
-                                                      TextureFilter filter = TextureFilter::LINEAR);
+  static util::Result<std::shared_ptr<Texture>, std::exception> create(
+      std::string path, bool flip = true,
+      ColorType color_type = ColorType::INFER,
+      TextureType texture_type = TextureType::TEXTURE_2D,
+      TextureWrapping wrapping = TextureWrapping::REPEAT,
+      TextureFilter filter = TextureFilter::LINEAR);
 
-  static util::Result<Texture, std::exception> create(glm::vec4 color,
-                                                      TextureWrapping wrapping = TextureWrapping::REPEAT,
-                                                      TextureFilter filter = TextureFilter::LINEAR);
+  static util::Result<std::shared_ptr<Texture>, std::exception> create(
+      glm::vec4 color, TextureWrapping wrapping = TextureWrapping::REPEAT,
+      TextureFilter filter = TextureFilter::LINEAR);
   inline GLuint get_id() { return id; }
 
-  inline void bind() { glBindTexture(static_cast<GLenum>(texture_type), id); }
-  inline void unbind() { glBindTexture(static_cast<GLenum>(texture_type), 0); }
+  void bind(GLenum textureUnit = GL_TEXTURE0);
+  void unbind();
 };
 }  // namespace kingom::engine
 

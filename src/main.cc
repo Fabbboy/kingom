@@ -1,3 +1,6 @@
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+
 #include <iostream>
 #include <sstream>
 
@@ -10,51 +13,126 @@ static void glfwErrorCallback(int error, const char* description) {
   std::cerr << "GLFW Error: " << description << std::endl;
 }
 
+void check_gl_errors(const std::string& msg) {
+  GLenum err;
+  while ((err = glGetError()) != GL_NO_ERROR) {
+    std::cerr << "OpenGL Error (" << msg << "): " << err << std::endl;
+  }
+}
+
 int main() {
+  auto result = kingom::engine::WindowDesc()
+                    .set_width(800)
+                    .set_height(600)
+
+                    .build();
   glfwSetErrorCallback(glfwErrorCallback);
-  auto result =
-      kingom::engine::WindowDesc().set_width(800).set_height(600).build();
 
   if (result.is_err()) {
     std::cerr << "Failed to create window: " << result.unwrap_err().what()
               << std::endl;
     return -1;
   }
+  std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
 
   auto window = result.unwrap();
+  window->activate();
   auto renderer = window->get_renderer();
 
-  std::stringstream vertexShader(
-      R"(
-    #version 460 core
+  std::stringstream vertexShaderStream, fragmentShaderStream;
+  vertexShaderStream << R"(
+    #version 330 core
     layout (location = 0) in vec3 aPos;
-    void main() {
-      gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
-    }
-  )");
+    layout (location = 1) in vec2 aTexCoord;
 
-  std::stringstream fragmentShader(
-      R"(
-    #version 460 core
+    out vec2 TexCoord;
+
+    void main() {
+        gl_Position = vec4(aPos, 1.0);
+        TexCoord = aTexCoord;
+    }
+  )";
+
+  fragmentShaderStream << R"(
+    #version 330 core
     out vec4 FragColor;
+
+    in vec2 TexCoord;
+
+    uniform sampler2D texture1;
+    uniform float time;
+
     void main() {
-      FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
+      FragColor = texture(texture1, TexCoord);
     }
-  )");
+  )";
 
-  auto shader = kingom::engine::Shader::create(vertexShader, fragmentShader);
-
-  auto tex = kingom::engine::Texture::create(glm::vec4(1.0f, 0.5f, 0.2f, 1.0f));
-
-  if (shader.is_err()) {
-    std::cerr << "Failed to create shader: " << shader.unwrap_err().what()
+  auto ret_shader = kingom::engine::Shader::create(vertexShaderStream.str(),
+                                                   fragmentShaderStream.str());
+  if (ret_shader.is_err()) {
+    std::cerr << "Failed to create shader: " << ret_shader.unwrap_err().what()
               << std::endl;
     return -1;
   }
+  auto shader = ret_shader.unwrap();
+
+  /*  auto tex_ret =
+       kingom::engine::Texture::create(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f)); */
+  auto tex_ret = kingom::engine::Texture::create("../assets/codeScreen.png");
+  if (tex_ret.is_err()) {
+    std::cerr << "Failed to create texture: " << tex_ret.unwrap_err().what()
+              << std::endl;
+    return -1;
+  }
+  auto tex = tex_ret.unwrap();
+
+  float vertices[] = {
+      // positions       // texture coords
+      0.5f,  0.5f,  0.0f, 1.0f, 1.0f,  // top right
+      0.5f,  -0.5f, 0.0f, 1.0f, 0.0f,  // bottom right
+      -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,  // bottom left
+      -0.5f, 0.5f,  0.0f, 0.0f, 1.0f   // top left
+  };
+
+  unsigned int indices[] = {
+      0, 1, 3,  // first triangle
+      1, 2, 3   // second triangle
+  };
+
+  unsigned int VBO, VAO, EBO;
+  glGenVertexArrays(1, &VAO);
+  glGenBuffers(1, &VBO);
+  glGenBuffers(1, &EBO);
+
+  glBindVertexArray(VAO);
+
+  glBindBuffer(GL_ARRAY_BUFFER, VBO);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices,
+               GL_STATIC_DRAW);
+
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+  glEnableVertexAttribArray(0);
+
+  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
+                        (void*)(3 * sizeof(float)));
+  glEnableVertexAttribArray(1);
+
+  check_gl_errors("Initial Setup");
 
   while (!window->should_close()) {
     window->poll_events();
     renderer->clear();
+
+    shader->use();
+    tex->bind(GL_TEXTURE0);
+    shader->set_int("texture1", 0);
+
+    glBindVertexArray(VAO);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
     renderer->swap();
   }
 
