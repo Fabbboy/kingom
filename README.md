@@ -31,4 +31,4 @@ Look at following tools:
 ### State
 - [x] Buffers for VBO, EBO
 - [x] Vertex Attribute
-- [ ] Vertex Array Object
+- [x] Vertex Array Object
