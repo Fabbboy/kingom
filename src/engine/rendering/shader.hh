@@ -27,10 +27,10 @@ class Shader {
   Shader() = default;
   ~Shader();
 
-  static util::Result<std::shared_ptr<Shader>, std::exception> create(
+  static util::Result<std::unique_ptr<Shader>, std::exception> create(
       std::string vertex_shader, std::string fragment_shader);
 
-  static util::Result<std::shared_ptr<Shader>, std::exception> create(
+  static util::Result<std::unique_ptr<Shader>, std::exception> create(
       std::istream& vertex_shader, std::istream& fragment_shader);
 
   inline void use() { glUseProgram(program_id); }
@@ -47,7 +47,7 @@ class Shader {
 
   inline unsigned int get_id() { return program_id; }
 };
-typedef std::shared_ptr<Shader> ShaderPtr;
+typedef std::unique_ptr<Shader> ShaderPtr;
 }  // namespace kingom::engine
 
 #endif

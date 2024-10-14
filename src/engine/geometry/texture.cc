@@ -92,7 +92,7 @@ void Texture::create_texture() {
 util::Result<TexturePtr, std::exception> Texture::create(
     std::string path, bool flip, ColorType color_type, TextureType texture_type,
     TextureWrapping wrapping, TextureFilter filter) {
-  TexturePtr texture = std::make_shared<Texture>();
+  TexturePtr texture = std::make_unique<Texture>();
   texture->color_type = color_type;
   texture->texture_type = texture_type;
   texture->wrapping = wrapping;
@@ -106,12 +106,12 @@ util::Result<TexturePtr, std::exception> Texture::create(
 
   texture->create_texture();
 
-  return util::Result<TexturePtr, std::exception>::Ok(texture);
+  return util::Result<TexturePtr, std::exception>::Ok(std::move(texture));
 }
 
 util::Result<TexturePtr, std::exception> Texture::create(
     glm::vec4 color, TextureWrapping wrapping, TextureFilter filter) {
-  TexturePtr texture = std::make_shared<Texture>();
+  TexturePtr texture = std::make_unique<Texture>();
   texture->color_type = ColorType::RGBA;
   texture->texture_type = TextureType::TEXTURE_2D;
   texture->wrapping = wrapping;
@@ -133,7 +133,7 @@ util::Result<TexturePtr, std::exception> Texture::create(
     std::exit(1);
   }
 
-  return util::Result<TexturePtr, std::exception>::Ok(texture);
+  return util::Result<TexturePtr, std::exception>::Ok(std::move(texture));
 }
 
 Texture::~Texture() { glDeleteTextures(1, &id); }

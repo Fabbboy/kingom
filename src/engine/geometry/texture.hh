@@ -59,14 +59,14 @@ class Texture {
   Texture() = default;
   ~Texture();
 
-  static util::Result<std::shared_ptr<Texture>, std::exception> create(
+  static util::Result<std::unique_ptr<Texture>, std::exception> create(
       std::string path, bool flip = true,
       ColorType color_type = ColorType::INFER,
       TextureType texture_type = TextureType::TEXTURE_2D,
       TextureWrapping wrapping = TextureWrapping::REPEAT,
       TextureFilter filter = TextureFilter::LINEAR);
 
-  static util::Result<std::shared_ptr<Texture>, std::exception> create(
+  static util::Result<std::unique_ptr<Texture>, std::exception> create(
       glm::vec4 color, TextureWrapping wrapping = TextureWrapping::REPEAT,
       TextureFilter filter = TextureFilter::LINEAR);
   inline GLuint get_id() { return id; }
@@ -75,7 +75,7 @@ class Texture {
   void unbind();
 };
 
-typedef std::shared_ptr<Texture> TexturePtr;
+typedef std::unique_ptr<Texture> TexturePtr;
 }  // namespace kingom::engine
 
 #endif

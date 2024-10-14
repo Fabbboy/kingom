@@ -120,9 +120,8 @@ int main() {
   layout.add_attribute(kingom::engine::VertexAttribute(
       2, kingom::engine::VertexAttributeType::FLOAT));
 
-  layout.add_buffers(
-      std::make_shared<kingom::engine::VertexBuffer>(vertex_buffer),
-      std::make_shared<kingom::engine::IndexBuffer>(index_buffer));
+  layout.add_buffers(std::make_unique<VertexBuffer>(vertex_buffer),
+                     std::make_unique<IndexBuffer>(index_buffer));
 
   auto res = layout.build();
   if (res.is_err()) {
@@ -132,7 +131,7 @@ int main() {
   }
 
   std::unique_ptr<BaseMaterial> material =
-      std::make_unique<CustomMaterial>(shader, tex);
+      std::make_unique<CustomMaterial>(std::move(shader), std::move(tex));
   auto mesh = Mesh(layout, std::move(material));
 
   while (!window->should_close()) {
