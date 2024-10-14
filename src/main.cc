@@ -5,6 +5,7 @@
 #include <sstream>
 
 #include "engine/buffers/buffer.hh"
+#include "engine/buffers/layout.hh"
 #include "engine/geometry/texture.hh"
 #include "engine/rendering/shader.hh"
 #include "engine/window/window.hh"
@@ -93,6 +94,7 @@ int main() {
   };
 
   kingom::engine::VertexBuffer vertex_buffer;
+  vertex_buffer.set_data(vertices.data(), vertices.size());
 
   std::vector<unsigned int> indices = {
       0, 1, 3,  // first triangle
@@ -100,20 +102,43 @@ int main() {
   };
 
   kingom::engine::IndexBuffer index_buffer;
-
-  unsigned int VBO, VAO, EBO;
-  glGenVertexArrays(1, &VAO);
-  glBindVertexArray(VAO);
-
-  vertex_buffer.set_data(vertices.data(), vertices.size());
   index_buffer.set_data(indices.data(), indices.size());
 
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-  glEnableVertexAttribArray(0);
+  kingom::engine::Layout layout;
+  layout.add_attribute(kingom::engine::VertexAttribute(
+      3, kingom::engine::VertexAttributeType::FLOAT));
+  layout.add_attribute(kingom::engine::VertexAttribute(
+      2, kingom::engine::VertexAttributeType::FLOAT));
 
-  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
-                        (void*)(3 * sizeof(float)));
-  glEnableVertexAttribArray(1);
+  layout.add_buffers(
+      std::make_shared<kingom::engine::VertexBuffer>(vertex_buffer),
+      std::make_shared<kingom::engine::IndexBuffer>(index_buffer));
+
+  auto res = layout.build();
+  if (res.is_err()) {
+    std::cerr << "Failed to build layout: " << res.unwrap_err().what()
+              << std::endl;
+    return -1;
+  }
+
+  // what currently is:
+  //  glVertexAttribPointer(0, 4, 5126, , 32, 0000000000000000)
+  // glEnableVertexAttribArray(0);
+  // glVertexAttribPointer(1, 4, 5126, , 32, 0000000000000010)
+  // glEnableVertexAttribArray(1);
+  // what worked:
+  // glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
+  // (void*)0); glEnableVertexAttribArray(0); glVertexAttribPointer(1, 2,
+  // GL_FLOAT, GL_FALSE, 5 * sizeof(float),
+  //                       (void*)(3 * sizeof(float)));
+  // glEnableVertexAttribArray(1);
+
+  GLenum error;
+  error = glGetError();
+  if (error != GL_NO_ERROR) {
+    std::cerr << "OpenGL Error: " << error << std::endl;
+    return -1;
+  }
 
   while (!window->should_close()) {
     window->poll_events();
@@ -123,7 +148,7 @@ int main() {
     tex->bind(GL_TEXTURE0);
     shader->set_int("texture1", 0);
 
-    glBindVertexArray(VAO);
+    layout.bind();
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
     renderer->swap();
