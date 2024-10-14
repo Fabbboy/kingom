@@ -6,21 +6,32 @@
 
 #include "engine/buffers/buffer.hh"
 #include "engine/buffers/layout.hh"
+#include "engine/geometry/material.hh"
+#include "engine/geometry/mesh.hh"
 #include "engine/geometry/texture.hh"
 #include "engine/rendering/shader.hh"
 #include "engine/window/window.hh"
 #include "engine/window/window_desc.hh"
 
-static void glfwErrorCallback(int error, const char* description) {
-  std::cerr << "GLFW Error: " << description << std::endl;
-}
+using namespace kingom::engine;
 
-void check_gl_errors(const std::string& msg) {
-  GLenum err;
-  while ((err = glGetError()) != GL_NO_ERROR) {
-    std::cerr << "OpenGL Error (" << msg << "): " << err << std::endl;
+class CustomMaterial : public BaseMaterial {
+ public:
+  CustomMaterial(std::shared_ptr<Shader> shader, std::shared_ptr<Texture> tex)
+      : shader(shader), tex(tex) {}
+
+  void bind() override {
+    shader->use();
+    tex->bind(GL_TEXTURE0);
+    shader->set_int("texture1", 0);
   }
-}
+
+  void unbind() override {}
+
+ private:
+  std::shared_ptr<Shader> shader;
+  std::shared_ptr<Texture> tex;
+};
 
 int main() {
   auto result = kingom::engine::WindowDesc()
@@ -28,7 +39,6 @@ int main() {
                     .set_height(600)
 
                     .build();
-  glfwSetErrorCallback(glfwErrorCallback);
 
   if (result.is_err()) {
     std::cerr << "Failed to create window: " << result.unwrap_err().what()
@@ -121,16 +131,15 @@ int main() {
     return -1;
   }
 
+  std::unique_ptr<BaseMaterial> material =
+      std::make_unique<CustomMaterial>(shader, tex);
+  auto mesh = Mesh(layout, std::move(material));
+
   while (!window->should_close()) {
     window->poll_events();
     renderer->clear();
 
-    shader->use();
-    tex->bind(GL_TEXTURE0);
-    shader->set_int("texture1", 0);
-
-    layout.bind();
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    mesh.draw();
 
     renderer->swap();
   }

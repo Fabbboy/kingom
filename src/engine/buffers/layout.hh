@@ -33,6 +33,10 @@ class Layout {
   void add_buffer(std::shared_ptr<VertexBuffer> vbo);
   void add_buffer(std::shared_ptr<IndexBuffer> ebo);
 
+  unsigned int get_count() const {
+    return ebo.has_value() ? ebo.value()->get_data()->size() : 0;
+  }
+
   util::Result<void, std::exception> build();
   inline void bind() const { glBindVertexArray(id); }
   inline void unbind() const { glBindVertexArray(0); }

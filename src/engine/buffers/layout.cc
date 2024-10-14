@@ -1,10 +1,11 @@
 #include "engine/buffers/layout.hh"
-
+#include <iostream>
 #include <stdexcept>
 
 namespace kingom::engine {
 Layout::Layout() { glGenVertexArrays(1, &id); }
 Layout::~Layout() {
+  std::cout << "Deleting layout" << std::endl;
   if (id != GL_NONE) glDeleteVertexArrays(1, &id);
 }
 
