@@ -1,18 +1,17 @@
 #ifndef KINGOM_ENGINE_CALLBACK_HH
 #define KINGOM_ENGINE_CALLBACK_HH
-#include <memory>
+#include "engine/memory.hh"
 
 namespace kingom::engine {
 class Window;
 class Renderer;
 namespace internal {
 struct CallbackData {
-  std::shared_ptr<Window> window;
-  std::shared_ptr<Renderer> renderer;
+  Ref<Window> window;
+  Ref<Renderer> renderer;
 
   CallbackData() = default;
-  CallbackData(std::shared_ptr<Window> window,
-               std::shared_ptr<Renderer> renderer)
+  CallbackData(Ref<Window> window, Ref<Renderer> renderer)
       : window(window), renderer(renderer) {}
 };
 }  // namespace internal

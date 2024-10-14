@@ -5,9 +5,9 @@
 #include <GLFW/glfw3.h>
 
 #include <glm/glm.hpp>
-#include <memory>
 #include <string>
 
+#include "engine/memory.hh"
 #include "util/result.hh"
 
 namespace kingom::engine {
@@ -27,10 +27,10 @@ class Shader {
   Shader() = default;
   ~Shader();
 
-  static util::Result<std::unique_ptr<Shader>, std::exception> create(
+  static util::Result<Box<Shader>, std::exception> create(
       std::string vertex_shader, std::string fragment_shader);
 
-  static util::Result<std::unique_ptr<Shader>, std::exception> create(
+  static util::Result<Box<Shader>, std::exception> create(
       std::istream& vertex_shader, std::istream& fragment_shader);
 
   inline void use() { glUseProgram(program_id); }
@@ -47,7 +47,7 @@ class Shader {
 
   inline unsigned int get_id() { return program_id; }
 };
-typedef std::unique_ptr<Shader> ShaderPtr;
+typedef Box<Shader> ShaderPtr;
 }  // namespace kingom::engine
 
 #endif

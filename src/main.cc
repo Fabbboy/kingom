@@ -9,6 +9,7 @@
 #include "engine/geometry/material.hh"
 #include "engine/geometry/mesh.hh"
 #include "engine/geometry/texture.hh"
+#include "engine/memory.hh"
 #include "engine/rendering/shader.hh"
 #include "engine/window/window.hh"
 #include "engine/window/window_desc.hh"
@@ -17,7 +18,7 @@ using namespace kingom::engine;
 
 class CustomMaterial : public BaseMaterial {
  public:
-  CustomMaterial(std::shared_ptr<Shader> shader, std::shared_ptr<Texture> tex)
+  CustomMaterial(Ref<Shader> shader, Ref<Texture> tex)
       : shader(shader), tex(tex) {}
 
   void bind() override {
@@ -29,8 +30,8 @@ class CustomMaterial : public BaseMaterial {
   void unbind() override {}
 
  private:
-  std::shared_ptr<Shader> shader;
-  std::shared_ptr<Texture> tex;
+  Ref<Shader> shader;
+  Ref<Texture> tex;
 };
 
 int main() {
@@ -120,8 +121,7 @@ int main() {
   layout.add_attribute(kingom::engine::VertexAttribute(
       2, kingom::engine::VertexAttributeType::FLOAT));
 
-  layout.attach(std::make_unique<VertexBuffer>(vertex_buffer),
-                std::make_unique<IndexBuffer>(index_buffer));
+  layout.attach(make_box(vertex_buffer), make_box(index_buffer));
 
   auto res = layout.build();
   if (res.is_err()) {
@@ -130,8 +130,8 @@ int main() {
     return -1;
   }
 
-  std::unique_ptr<BaseMaterial> material =
-      std::make_unique<CustomMaterial>(std::move(shader), std::move(tex));
+  Box<BaseMaterial> material =
+      make_box<CustomMaterial>(std::move(shader), std::move(tex));
   auto mesh = Mesh(layout, std::move(material));
 
   while (!window->should_close()) {

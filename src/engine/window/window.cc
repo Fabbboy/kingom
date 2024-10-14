@@ -58,26 +58,25 @@ util::Result<std::vector<GLFWmonitor*>, std::exception> Window::get_monitors(
       std::move(result));
 }
 
-util::Result<std::shared_ptr<Window>, std::exception> Window::init(
-    const WindowDesc& desc) {
+util::Result<Ref<Window>, std::exception> Window::init(const WindowDesc& desc) {
   if (!glfwInit()) {
     throw std::runtime_error("Failed to initialize GLFW");
   }
 
-  auto window = std::make_shared<Window>();
+  auto window = make_ref<Window>();
   window->desc = desc;
   window->apply_hints();
 
   auto monitors = window->get_monitors(desc.monitor);
   if (monitors.is_err()) {
-    return util::Result<std::shared_ptr<Window>, std::exception>::Err(
+    return util::Result<Ref<Window>, std::exception>::Err(
         std::runtime_error("Failed to get monitors"));
   }
 
   window->monitor = monitors.unwrap()[0];
   auto video_mode = glfwGetVideoMode(window->monitor);
   if (!video_mode) {
-    return util::Result<std::shared_ptr<Window>, std::exception>::Err(
+    return util::Result<Ref<Window>, std::exception>::Err(
         std::runtime_error("Failed to get video mode"));
   }
 
@@ -99,7 +98,7 @@ util::Result<std::shared_ptr<Window>, std::exception> Window::init(
   }
 
   if (!window->window) {
-    return util::Result<std::shared_ptr<Window>, std::exception>::Err(
+    return util::Result<Ref<Window>, std::exception>::Err(
         std::runtime_error("Failed to create window"));
   }
 
@@ -107,24 +106,24 @@ util::Result<std::shared_ptr<Window>, std::exception> Window::init(
 
   glewExperimental = GL_TRUE;
   if (glewInit() != GLEW_OK) {
-    return util::Result<std::shared_ptr<Window>, std::exception>::Err(
+    return util::Result<Ref<Window>, std::exception>::Err(
         std::runtime_error("Failed to initialize GLEW"));
   }
 
-  glEnable(GL_DEPTH_TEST);  
+  glEnable(GL_DEPTH_TEST);
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-  window->renderer = std::make_shared<Renderer>(window);
+  window->renderer = make_ref<Renderer>(window);
   window->callback_data =
-      std::make_shared<internal::CallbackData>(window, window->renderer);
+      make_ref<internal::CallbackData>(window, window->renderer);
 
   glfwSetWindowUserPointer(window->window, window->callback_data.get());
   glViewport(0, 0, desc.width, desc.height);
 
-  return util::Result<std::shared_ptr<Window>, std::exception>::Ok(window);
+  return util::Result<Ref<Window>, std::exception>::Ok(window);
 }
 
-std::shared_ptr<Renderer> Window::get_renderer() { return renderer; }
+Ref<Renderer> Window::get_renderer() { return renderer; }
 
 }  // namespace kingom::engine

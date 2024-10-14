@@ -22,8 +22,8 @@ class Window {
   WindowDesc desc;
   GLFWwindow* window;
   GLFWmonitor* monitor;
-  std::shared_ptr<internal::CallbackData> callback_data;
-  std::shared_ptr<Renderer> renderer;
+  Ref<internal::CallbackData> callback_data;
+  Ref<Renderer> renderer;
 
  private:
   void apply_hints();
@@ -33,18 +33,15 @@ class Window {
   util::Result<std::vector<GLFWmonitor*>, std::exception> get_monitors(
       int preference = -1);
 
-  std::shared_ptr<internal::CallbackData> get_callback_data() {
-    return callback_data;
-  }
+  Ref<internal::CallbackData> get_callback_data() { return callback_data; }
 
  public:
   Window() = default;
   ~Window();
 
-  static util::Result<std::shared_ptr<Window>, std::exception> init(
-      const WindowDesc& desc);
+  static util::Result<Ref<Window>, std::exception> init(const WindowDesc& desc);
 
-  std::shared_ptr<Renderer> get_renderer();
+  Ref<Renderer> get_renderer();
 
   void activate();
 

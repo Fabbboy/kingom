@@ -92,7 +92,7 @@ void Texture::create_texture() {
 util::Result<TexturePtr, std::exception> Texture::create(
     std::string path, bool flip, ColorType color_type, TextureType texture_type,
     TextureWrapping wrapping, TextureFilter filter) {
-  TexturePtr texture = std::make_unique<Texture>();
+  TexturePtr texture = make_box<Texture>();
   texture->color_type = color_type;
   texture->texture_type = texture_type;
   texture->wrapping = wrapping;
@@ -100,8 +100,7 @@ util::Result<TexturePtr, std::exception> Texture::create(
 
   auto result = texture->load_image(path, flip);
   if (result.is_err()) {
-    return util::Result<TexturePtr, std::exception>::Err(
-        result.unwrap_err());
+    return util::Result<TexturePtr, std::exception>::Err(result.unwrap_err());
   }
 
   texture->create_texture();
@@ -111,7 +110,7 @@ util::Result<TexturePtr, std::exception> Texture::create(
 
 util::Result<TexturePtr, std::exception> Texture::create(
     glm::vec4 color, TextureWrapping wrapping, TextureFilter filter) {
-  TexturePtr texture = std::make_unique<Texture>();
+  TexturePtr texture = make_box<Texture>();
   texture->color_type = ColorType::RGBA;
   texture->texture_type = TextureType::TEXTURE_2D;
   texture->wrapping = wrapping;

@@ -3,6 +3,7 @@
 
 #include "engine/buffers/layout.hh"
 #include "engine/geometry/material.hh"
+#include "engine/memory.hh"
 
 namespace kingom::engine {
 enum class DrawMethod {
@@ -18,11 +19,11 @@ enum class DrawMethod {
 class Mesh {
  private:
   Layout layout;
-  std::unique_ptr<BaseMaterial> material;
+  Box<BaseMaterial> material;
   DrawMethod draw_method;
 
  public:
-  Mesh(Layout& layout, std::unique_ptr<BaseMaterial> material,
+  Mesh(Layout& layout, Box<BaseMaterial> material,
        DrawMethod draw_method = DrawMethod::Triangle)
       : layout(layout),
         material(std::move(material)),

@@ -5,7 +5,7 @@
 #include "engine/window/window.hh"
 
 namespace kingom::engine {
-Renderer::Renderer(std::shared_ptr<Window> window) : window(window) {
+Renderer::Renderer(Ref<Window> window) : window(window) {
   glfwSetFramebufferSizeCallback(window->get_window(),
                                  framebuffer_size_callback);
 }

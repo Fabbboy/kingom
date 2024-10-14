@@ -51,7 +51,7 @@ Shader::~Shader() {
 }
 util::Result<ShaderPtr, std::exception> Shader::create(
     std::string vertex_shader, std::string fragment_shader) {
-  ShaderPtr shader = std::make_unique<Shader>();
+  ShaderPtr shader = make_box<Shader>();
   shader->program_id = glCreateProgram();
   shader->vertex_id = glCreateShader(GL_VERTEX_SHADER);
   shader->fragment_id = glCreateShader(GL_FRAGMENT_SHADER);

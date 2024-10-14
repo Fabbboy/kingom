@@ -14,18 +14,13 @@ void Layout::add_attribute(VertexAttribute attribute) {
   attributes.push_back(attribute);
 }
 
-void Layout::attach(std::unique_ptr<VertexBuffer> vbo,
-                    std::unique_ptr<IndexBuffer> ebo) {
+void Layout::attach(Box<VertexBuffer> vbo, Box<IndexBuffer> ebo) {
   this->vbo = std::move(vbo);
   this->ebo = std::move(ebo);
 }
 
-void Layout::attach(std::unique_ptr<VertexBuffer> vbo) {
-  this->vbo = std::move(vbo);
-}
-void Layout::attach(std::unique_ptr<IndexBuffer> ebo) {
-  this->ebo = std::move(ebo);
-}
+void Layout::attach(Box<VertexBuffer> vbo) { this->vbo = std::move(vbo); }
+void Layout::attach(Box<IndexBuffer> ebo) { this->ebo = std::move(ebo); }
 
 void Layout::calculate_offset_and_stride() {
   offset = 0;

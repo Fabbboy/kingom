@@ -4,13 +4,14 @@
 #include <GLFW/glfw3.h>
 
 #include <glm/glm.hpp>
-#include <memory>
+
+#include "engine/memory.hh"
 
 namespace kingom::engine {
 class Window;
 class Renderer {
  private:
-  std::shared_ptr<Window> window;
+  Ref<Window> window;
   glm::vec4 ccolor = glm::vec4(0.2f, 0.3f, 0.3f, 1.0f);
 
  private:
@@ -18,7 +19,7 @@ class Renderer {
                                         int height);
 
  public:
-  Renderer(std::shared_ptr<Window> window);
+  Renderer(Ref<Window> window);
 
   void swap();
   void clear();

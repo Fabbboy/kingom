@@ -2,7 +2,7 @@
 #define KINGOM_ENGINE_WINDOW_DESC_HH
 
 #include <exception>
-#include <memory>
+#include "engine/memory.hh"
 
 #include "util/result.hh"
 
@@ -81,7 +81,7 @@ struct WindowDesc {
     return *this;
   }
 
-  util::Result<std::shared_ptr<Window>, std::exception> build() const;
+  util::Result<Ref<Window>, std::exception> build() const;
 };
 
 }  // namespace kingom::engine
