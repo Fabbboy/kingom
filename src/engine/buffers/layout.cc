@@ -14,16 +14,16 @@ void Layout::add_attribute(VertexAttribute attribute) {
   attributes.push_back(attribute);
 }
 
-void Layout::add_buffers(std::unique_ptr<VertexBuffer> vbo,
-                         std::unique_ptr<IndexBuffer> ebo) {
+void Layout::attach(std::unique_ptr<VertexBuffer> vbo,
+                    std::unique_ptr<IndexBuffer> ebo) {
   this->vbo = std::move(vbo);
   this->ebo = std::move(ebo);
 }
 
-void Layout::add_buffer(std::unique_ptr<VertexBuffer> vbo) {
+void Layout::attach(std::unique_ptr<VertexBuffer> vbo) {
   this->vbo = std::move(vbo);
 }
-void Layout::add_buffer(std::unique_ptr<IndexBuffer> ebo) {
+void Layout::attach(std::unique_ptr<IndexBuffer> ebo) {
   this->ebo = std::move(ebo);
 }
 

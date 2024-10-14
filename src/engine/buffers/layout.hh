@@ -28,10 +28,10 @@ class Layout {
   ~Layout();
 
   void add_attribute(VertexAttribute attribute);
-  void add_buffers(std::unique_ptr<VertexBuffer> vbo,
-                   std::unique_ptr<IndexBuffer> ebo);
-  void add_buffer(std::unique_ptr<VertexBuffer> vbo);
-  void add_buffer(std::unique_ptr<IndexBuffer> ebo);
+  void attach(std::unique_ptr<VertexBuffer> vbo,
+              std::unique_ptr<IndexBuffer> ebo);
+  void attach(std::unique_ptr<VertexBuffer> vbo);
+  void attach(std::unique_ptr<IndexBuffer> ebo);
 
   unsigned int get_count() const {
     return ebo.has_value() ? ebo.value()->get_data()->size() : 0;

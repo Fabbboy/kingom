@@ -120,8 +120,8 @@ int main() {
   layout.add_attribute(kingom::engine::VertexAttribute(
       2, kingom::engine::VertexAttributeType::FLOAT));
 
-  layout.add_buffers(std::make_unique<VertexBuffer>(vertex_buffer),
-                     std::make_unique<IndexBuffer>(index_buffer));
+  layout.attach(std::make_unique<VertexBuffer>(vertex_buffer),
+                std::make_unique<IndexBuffer>(index_buffer));
 
   auto res = layout.build();
   if (res.is_err()) {
