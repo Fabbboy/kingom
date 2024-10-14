@@ -1,6 +1,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include <fstream>
 #include <iostream>
 #include <sstream>
 
@@ -51,36 +52,10 @@ int main() {
   window->activate();
   auto renderer = window->get_renderer();
 
-  std::stringstream vertexShaderStream, fragmentShaderStream;
-  vertexShaderStream << R"(
-    #version 330 core
-    layout (location = 0) in vec3 aPos;
-    layout (location = 1) in vec2 aTexCoord;
+  std::fstream vertex_file("../assets/codeScreen.vert");
+  std::fstream fragment_file("../assets/codeScreen.frag");
 
-    out vec2 TexCoord;
-
-    void main() {
-        gl_Position = vec4(aPos, 1.0);
-        TexCoord = aTexCoord;
-    }
-  )";
-
-  fragmentShaderStream << R"(
-    #version 330 core
-    out vec4 FragColor;
-
-    in vec2 TexCoord;
-
-    uniform sampler2D texture1;
-    uniform float time;
-
-    void main() {
-      FragColor = texture(texture1, TexCoord);
-    }
-  )";
-
-  auto ret_shader = kingom::engine::Shader::create(vertexShaderStream.str(),
-                                                   fragmentShaderStream.str());
+  auto ret_shader = Shader::create(vertex_file, fragment_file);
   if (ret_shader.is_err()) {
     std::cerr << "Failed to create shader: " << ret_shader.unwrap_err().what()
               << std::endl;
