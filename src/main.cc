@@ -18,7 +18,7 @@ using namespace kingom::engine;
 
 class CustomMaterial : public BaseMaterial {
  public:
-  CustomMaterial(Ref<Shader> shader, Ref<Texture> tex)
+  CustomMaterial(Raw<Shader> shader, Raw<Texture> tex)
       : shader(shader), tex(tex) {}
 
   void bind() override {
@@ -30,8 +30,8 @@ class CustomMaterial : public BaseMaterial {
   void unbind() override {}
 
  private:
-  Ref<Shader> shader;
-  Ref<Texture> tex;
+  Raw<Shader> shader;
+  Raw<Texture> tex;
 };
 
 int main() {
@@ -131,8 +131,8 @@ int main() {
   }
 
   Box<BaseMaterial> material =
-      make_box<CustomMaterial>(std::move(shader), std::move(tex));
-  auto mesh = Mesh(layout, std::move(material));
+      make_box<CustomMaterial>(shader.get(), tex.get());
+  Mesh mesh(make_box(layout), std::move(material));
 
   while (!window->should_close()) {
     window->poll_events();

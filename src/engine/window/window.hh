@@ -4,7 +4,6 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#include <memory>
 #include <vector>
 
 #include "engine/internal/callback.hh"
@@ -45,8 +44,8 @@ class Window {
 
   void activate();
 
-  inline GLFWwindow* get_window() { return window; }
-  inline std::pair<int, int> get_size() {
+  inline GLFWwindow* get_window() const { return window; }
+  inline std::pair<int, int> get_size() const {
     return std::make_pair(desc.width, desc.height);
   }
 

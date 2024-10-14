@@ -7,6 +7,8 @@ template <typename T>
 using Box = std::unique_ptr<T>;
 template <typename T>
 using Ref = std::shared_ptr<T>;
+template <typename T>
+using Raw = T*;
 
 template <typename T>
 constexpr Box<std::remove_reference_t<T>> make_box(T&& value) {
