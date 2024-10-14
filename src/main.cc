@@ -121,25 +121,6 @@ int main() {
     return -1;
   }
 
-  // what currently is:
-  //  glVertexAttribPointer(0, 4, 5126, , 32, 0000000000000000)
-  // glEnableVertexAttribArray(0);
-  // glVertexAttribPointer(1, 4, 5126, , 32, 0000000000000010)
-  // glEnableVertexAttribArray(1);
-  // what worked:
-  // glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
-  // (void*)0); glEnableVertexAttribArray(0); glVertexAttribPointer(1, 2,
-  // GL_FLOAT, GL_FALSE, 5 * sizeof(float),
-  //                       (void*)(3 * sizeof(float)));
-  // glEnableVertexAttribArray(1);
-
-  GLenum error;
-  error = glGetError();
-  if (error != GL_NO_ERROR) {
-    std::cerr << "OpenGL Error: " << error << std::endl;
-    return -1;
-  }
-
   while (!window->should_close()) {
     window->poll_events();
     renderer->clear();
