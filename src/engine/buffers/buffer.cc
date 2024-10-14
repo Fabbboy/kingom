@@ -1,9 +1,8 @@
 #include "engine/buffers/buffer.hh"
 
 namespace kingom::engine {
-Buffer::Buffer(BufferType type) : type(type) { glGenBuffers(1, &id); }
-Buffer::~Buffer() { glDeleteBuffers(1, &id); }
-
-void Buffer::bind() { glBindBuffer(static_cast<GLenum>(type), id); }
-void Buffer::unbind() { glBindBuffer(static_cast<GLenum>(type), 0); }
-}  // namespace kingom::engine::internal
+BaseBuffer::BaseBuffer(BufferType type) : type(type) { glGenBuffers(1, &id); }
+BaseBuffer::~BaseBuffer() { glDeleteBuffers(1, &id); }
+void BaseBuffer::bind() const { glBindBuffer(static_cast<GLenum>(type), id); }
+void BaseBuffer::unbind() const { glBindBuffer(static_cast<GLenum>(type), 0); }
+}  // namespace kingom::engine

@@ -1,10 +1,13 @@
-#ifndef KINGOM_ENGINE_BUFFER_HH
-#define KINGOM_ENGINE_BUFFER_HH
+#ifndef KINGDOM_ENGINE_BUFFER_HH
+#define KINGDOM_ENGINE_BUFFER_HH
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include <cstddef>
+
 namespace kingom::engine {
+
 enum class BufferType {
   Vertex = GL_ARRAY_BUFFER,
   Index = GL_ELEMENT_ARRAY_BUFFER,
@@ -19,28 +22,50 @@ enum class DrawMode {
   Stream = GL_STREAM_DRAW
 };
 
-class Buffer {
- private:
+class BaseBuffer {
+ protected:
   GLuint id;
   BufferType type;
 
  public:
-  Buffer(BufferType type);
-  ~Buffer();
+  BaseBuffer(BufferType type);
+  virtual ~BaseBuffer();
 
-  void bind();
-  void unbind();
+  void bind() const;
+  void unbind() const;
 
-  inline GLuint get_id() { return id; };
-  inline BufferType get_type() { return type; };
+  inline GLuint get_id() const { return id; }
+  inline BufferType get_type() const { return type; }
 
   template <typename T>
-  void set_data(size_t size, T* data, DrawMode mode = DrawMode::Static) {
+  void set_data(const T* data, size_t count, DrawMode mode = DrawMode::Static) {
     bind();
-    glBufferData(static_cast<GLenum>(type), size, data,
+    glBufferData(static_cast<GLenum>(type), count * sizeof(T), data,
                  static_cast<GLenum>(mode));
-  };
+  }
 };
-}  // namespace kingom::engine::internal
 
-#endif
+// Specialized buffers
+class VertexBuffer : public BaseBuffer {
+ public:
+  VertexBuffer() : BaseBuffer(BufferType::Vertex) {}
+};
+
+class IndexBuffer : public BaseBuffer {
+ public:
+  IndexBuffer() : BaseBuffer(BufferType::Index) {}
+};
+
+class UniformBuffer : public BaseBuffer {
+ public:
+  UniformBuffer() : BaseBuffer(BufferType::Uniform) {}
+};
+
+class StorageBuffer : public BaseBuffer {
+ public:
+  StorageBuffer() : BaseBuffer(BufferType::Storage) {}
+};
+
+}  // namespace kingom::engine
+
+#endif  // KINGDOM_ENGINE_BUFFER_HH

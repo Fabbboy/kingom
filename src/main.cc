@@ -4,8 +4,8 @@
 #include <iostream>
 #include <sstream>
 
-#include "engine/geometry/texture.hh"
 #include "engine/buffers/buffer.hh"
+#include "engine/geometry/texture.hh"
 #include "engine/rendering/shader.hh"
 #include "engine/window/window.hh"
 #include "engine/window/window_desc.hh"
@@ -84,7 +84,7 @@ int main() {
   }
   auto tex = tex_ret.unwrap();
 
-  float vertices[] = {
+  std::vector<float> vertices = {
       // positions       // texture coords
       0.5f,  0.5f,  0.0f, 1.0f, 1.0f,  // top right
       0.5f,  -0.5f, 0.0f, 1.0f, 0.0f,  // bottom right
@@ -92,23 +92,21 @@ int main() {
       -0.5f, 0.5f,  0.0f, 0.0f, 1.0f   // top left
   };
 
-  kingom::engine::Buffer vertex_buffer(
-      kingom::engine::BufferType::Vertex);
+  kingom::engine::VertexBuffer vertex_buffer;
 
-  unsigned int indices[] = {
+  std::vector<unsigned int> indices = {
       0, 1, 3,  // first triangle
       1, 2, 3   // second triangle
   };
 
-  kingom::engine::Buffer index_buffer(
-      kingom::engine::BufferType::Index);
+  kingom::engine::IndexBuffer index_buffer;
 
   unsigned int VBO, VAO, EBO;
   glGenVertexArrays(1, &VAO);
   glBindVertexArray(VAO);
 
-  vertex_buffer.set_data(sizeof(vertices), vertices);
-  index_buffer.set_data(sizeof(indices), indices);
+  vertex_buffer.set_data(vertices.data(), vertices.size());
+  index_buffer.set_data(indices.data(), indices.size());
 
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
   glEnableVertexAttribArray(0);

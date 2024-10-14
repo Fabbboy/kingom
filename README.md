@@ -27,3 +27,8 @@ Look at following tools:
 - [CMake](https://cmake.org/) - Cross-platform build system
 - [Scoop](https://scoop.sh/) - Windows package manager
 - [Chocolatey](https://chocolatey.org/) - Windows package manager
+
+### State
+- [x] Buffers for VBO, EBO
+- [x] Vertex Attribute
+- [ ] Vertex Array Object

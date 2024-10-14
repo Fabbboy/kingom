@@ -37,10 +37,10 @@ inline unsigned int get_size(VertexAttributeType type) {
 }
 }  // namespace internal
 struct VertexAttribute {
-  int size;
+  GLint size;
   VertexAttributeType type;
-  bool normalized;
-  int offset;
+  GLboolean normalized;
+  GLint offset;
 
   VertexAttribute(VertexAttributeType type, bool normalized = false,
                   int offset = 0)
@@ -48,6 +48,11 @@ struct VertexAttribute {
         type(type),
         normalized(normalized),
         offset(0) {}
+
+  inline void set_offset(int offset) { this->offset = offset; };
+  inline void set_size(int size) { this->size = size; };
+  inline void set_type(VertexAttributeType type) { this->type = type; }
+  inline void set_normalized(bool normalized) { this->normalized = normalized; }
 };
 }  // namespace kingom::engine
 
