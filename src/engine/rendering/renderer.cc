@@ -9,6 +9,12 @@ Renderer::Renderer(Ref<Window> window) : window(window) {
   glfwSetFramebufferSizeCallback(window->get_window(),
                                  framebuffer_size_callback);
 }
+void Renderer::update_delta_time() {
+  time.current_frame = glfwGetTime();
+  time.delta_time = time.current_frame - time.last_frame;
+  time.last_frame = time.current_frame;
+};
+
 void Renderer::framebuffer_size_callback(GLFWwindow* window, int width,
                                          int height) {
   auto data =

@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "buffer.hh"
-#include "engine/buffers/vattribute.hh"
+#include "engine/buffer/vattribute.hh"
 #include "engine/memory.hh"
 #include "util/result.hh"
 
