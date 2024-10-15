@@ -96,9 +96,14 @@ class OrthographicCamera : public BaseCamera {
 
   void rotate(const glm::vec3& offset) override { rotation += offset; }
 
-  void update(float deltaTime) override {
-    // If you want to implement any logic here, such as camera movement/rotation
-    // updates
+  void update(float _) override {
+    glm::mat4 rotationMatrix = glm::rotate(
+        glm::mat4(1.0f), glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+
+    glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), position);
+
+    // Calculate the updated view matrix (inverse of the camera transformation)
+    view_matrix = glm::inverse(translationMatrix * rotationMatrix);
   }
 };
 

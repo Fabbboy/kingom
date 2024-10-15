@@ -133,17 +133,32 @@ int main() {
     renderer->clear();
 
     if (glfwGetKey(window->get_window(), GLFW_KEY_W) == GLFW_PRESS) {
-      camera->move(glm::vec3(0.0f, 0.0f, 0.01f));
-    } else if (glfwGetKey(window->get_window(), GLFW_KEY_S) == GLFW_PRESS) {
-      camera->move(glm::vec3(0.0f, 0.0f, -0.01f));
-    } else if (glfwGetKey(window->get_window(), GLFW_KEY_A) == GLFW_PRESS) {
-      camera->move(glm::vec3(-0.01f, 0.0f, 0.0f));
-    } else if (glfwGetKey(window->get_window(), GLFW_KEY_D) == GLFW_PRESS) {
-      camera->move(glm::vec3(0.01f, 0.0f, 0.0f));
+      camera->move(glm::vec3(0.0f, 0.01f, 0.0f));  // Move up
     }
+    if (glfwGetKey(window->get_window(), GLFW_KEY_S) == GLFW_PRESS) {
+      camera->move(glm::vec3(0.0f, -0.01f, 0.0f));  // Move down
+    }
+    if (glfwGetKey(window->get_window(), GLFW_KEY_A) == GLFW_PRESS) {
+      camera->move(glm::vec3(-0.01f, 0.0f, 0.0f));  // Move left
+    }
+    if (glfwGetKey(window->get_window(), GLFW_KEY_D) == GLFW_PRESS) {
+      camera->move(glm::vec3(0.01f, 0.0f, 0.0f));  // Move right
+    }
+
+    if (glfwGetKey(window->get_window(), GLFW_KEY_Q) == GLFW_PRESS) {
+      camera->rotate(glm::vec3(0.0f, 0.0f, 1.0f));  // Rotate counter-clockwise
+    }
+    // Rotate camera clockwise (Z-axis rotation)
+    if (glfwGetKey(window->get_window(), GLFW_KEY_E) == GLFW_PRESS) {
+      camera->rotate(glm::vec3(0.0f, 0.0f, -1.0f));  // Rotate clockwise
+    }
+
+    camera->update(renderer->get_delta_time());
 
     glm::mat4 view = camera->get_view_matrix();
     glm::mat4 projection = camera->get_projection_matrix();
+
+    std::cout << glm::to_string(view) << std::endl;
 
     mesh.draw(make_box<CustomMaterialData>(view, projection));
 
