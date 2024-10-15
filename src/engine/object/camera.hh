@@ -44,37 +44,33 @@ class OrthographicCamera : public BaseCamera {
   glm::mat4 view_matrix;
   glm::mat4 projection_matrix;
 
+  void update_view_matrix();
+  void update_projection_matrix(float left, float right, float bottom,
+                                float top);
+
  public:
   OrthographicCamera(float left, float right, float bottom, float top,
                      float near_clip, float far_clip);
 
-  glm::mat4 get_view_matrix() const override;
-
-  glm::mat4 get_projection_matrix() const override { return projection_matrix; }
-
-  inline void set_position(const glm::vec3& position) override {
-    this->position = position;
-  }
-  inline void set_rotation(const glm::vec3& rotation) override {
-    this->rotation = rotation;
-  }
-  inline void set_fov(float fov) override { this->fov = fov; }
-  inline void set_aspect_ratio(float aspect_ratio) override {
-    this->aspect_ratio = aspect_ratio;
-  }
-  inline void set_near_clip(float near_clip) override {
-    this->near_clip = near_clip;
-  }
-  inline void set_far_clip(float far_clip) override {
-    this->far_clip = far_clip;
+  inline glm::mat4 get_view_matrix() const override { return view_matrix; }
+  inline glm::mat4 get_projection_matrix() const override {
+    return projection_matrix;
   }
 
-  inline glm::vec3 get_position() const override { return position; }
-  inline glm::vec3 get_rotation() const override { return rotation; }
-  inline float get_fov() const override { return fov; }
-  inline float get_aspect_ratio() const override { return aspect_ratio; }
-  inline float get_near_clip() const override { return near_clip; }
-  inline float get_far_clip() const override { return far_clip; }
+  void set_position(const glm::vec3& new_position) override;
+  void set_rotation(const glm::vec3& new_rotation) override;
+
+  void set_fov(float new_fov) override;
+  void set_aspect_ratio(float new_aspect_ratio) override;
+  void set_near_clip(float new_near_clip) override;
+  void set_far_clip(float new_far_clip) override;
+
+  glm::vec3 get_position() const override { return position; }
+  glm::vec3 get_rotation() const override { return rotation; }
+  float get_fov() const override { return fov; }
+  float get_aspect_ratio() const override { return aspect_ratio; }
+  float get_near_clip() const override { return near_clip; }
+  float get_far_clip() const override { return far_clip; }
 
   void move(const glm::vec3& offset) override;
   void rotate(const glm::vec3& offset) override;
@@ -97,22 +93,14 @@ class PerspectiveCamera : public BaseCamera {
                     float far_clip);
 
   glm::mat4 get_view_matrix() const override { return view_matrix; }
-
   glm::mat4 get_projection_matrix() const override { return projection_matrix; }
 
   void set_position(const glm::vec3& new_position) override;
-
   void set_rotation(const glm::vec3& new_rotation) override;
 
-  void set_fov(float new_fov) override {
-    fov = new_fov;
-    update_projection_matrix();
-  }
-
+  void set_fov(float new_fov) override;
   void set_aspect_ratio(float new_aspect_ratio) override;
-
   void set_near_clip(float new_near_clip) override;
-
   void set_far_clip(float new_far_clip) override;
 
   glm::vec3 get_position() const override { return position; }

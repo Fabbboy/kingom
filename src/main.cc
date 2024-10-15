@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "engine/engine.hh"
+#include "engine/object/camera.hh"
 
 using namespace kingom::engine;
 
@@ -113,7 +114,7 @@ int main() {
   Mesh mesh(make_box(layout), std::move(material));
 
   auto camera =
-      make_box<base::PerspectiveCamera>(45.0f, 800.0f / 600.0f, 0.1f, 100.0f);
+      make_box<base::OrthographicCamera>(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f);
   camera->set_position(glm::vec3(0.0f, 0.0f, 3.0f));
 
   while (!window->should_close()) {
