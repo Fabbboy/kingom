@@ -115,7 +115,6 @@ int main() {
 
   auto camera =
       make_box<base::OrthographicCamera>(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f);
-  camera->set_position(glm::vec3(0.0f, 0.0f, 3.0f));
 
   while (!window->should_close()) {
     window->poll_events();
