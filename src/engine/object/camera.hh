@@ -29,8 +29,6 @@ class BaseCamera {
 
   virtual void move(const glm::vec3& offset) = 0;
   virtual void rotate(const glm::vec3& offset) = 0;
-
-  virtual void update(float deltaTime) = 0;
 };
 
 namespace base {
@@ -48,41 +46,74 @@ class OrthographicCamera : public BaseCamera {
 
  public:
   OrthographicCamera(float left, float right, float bottom, float top,
-                     float near_clip, float far_clip)
-      : position(glm::vec3(0.0f, 0.0f, 0.0f)),
-        rotation(glm::vec3(0.0f, 0.0f, 0.0f)),
-        fov(45.0f),
-        aspect_ratio(1.0f),
-        near_clip(near_clip),
-        far_clip(far_clip) {
-    projection_matrix =
-        glm::ortho(left, right, bottom, top, near_clip, far_clip);
-  }
+                     float near_clip, float far_clip);
 
-  glm::mat4 get_view_matrix() const override {
-    return glm::translate(glm::mat4(1.0f), position) *
-           glm::rotate(glm::mat4(1.0f), glm::radians(rotation.x),
-                       glm::vec3(1.0f, 0.0f, 0.0f)) *
-           glm::rotate(glm::mat4(1.0f), glm::radians(rotation.y),
-                       glm::vec3(0.0f, 1.0f, 0.0f)) *
-           glm::rotate(glm::mat4(1.0f), glm::radians(rotation.z),
-                       glm::vec3(0.0f, 0.0f, 1.0f));
-  }
+  glm::mat4 get_view_matrix() const override;
 
   glm::mat4 get_projection_matrix() const override { return projection_matrix; }
 
-  void set_position(const glm::vec3& position) override {
+  inline void set_position(const glm::vec3& position) override {
     this->position = position;
   }
-  void set_rotation(const glm::vec3& rotation) override {
+  inline void set_rotation(const glm::vec3& rotation) override {
     this->rotation = rotation;
   }
-  void set_fov(float fov) override { this->fov = fov; }
-  void set_aspect_ratio(float aspect_ratio) override {
+  inline void set_fov(float fov) override { this->fov = fov; }
+  inline void set_aspect_ratio(float aspect_ratio) override {
     this->aspect_ratio = aspect_ratio;
   }
-  void set_near_clip(float near_clip) override { this->near_clip = near_clip; }
-  void set_far_clip(float far_clip) override { this->far_clip = far_clip; }
+  inline void set_near_clip(float near_clip) override {
+    this->near_clip = near_clip;
+  }
+  inline void set_far_clip(float far_clip) override {
+    this->far_clip = far_clip;
+  }
+
+  inline glm::vec3 get_position() const override { return position; }
+  inline glm::vec3 get_rotation() const override { return rotation; }
+  inline float get_fov() const override { return fov; }
+  inline float get_aspect_ratio() const override { return aspect_ratio; }
+  inline float get_near_clip() const override { return near_clip; }
+  inline float get_far_clip() const override { return far_clip; }
+
+  void move(const glm::vec3& offset) override;
+  void rotate(const glm::vec3& offset) override;
+};
+
+class PerspectiveCamera : public BaseCamera {
+ private:
+  glm::vec3 position;
+  glm::vec3 rotation;
+  float fov;
+  float aspect_ratio;
+  float near_clip;
+  float far_clip;
+
+  glm::mat4 view_matrix;
+  glm::mat4 projection_matrix;
+
+ public:
+  PerspectiveCamera(float fov, float aspect_ratio, float near_clip,
+                    float far_clip);
+
+  glm::mat4 get_view_matrix() const override { return view_matrix; }
+
+  glm::mat4 get_projection_matrix() const override { return projection_matrix; }
+
+  void set_position(const glm::vec3& new_position) override;
+
+  void set_rotation(const glm::vec3& new_rotation) override;
+
+  void set_fov(float new_fov) override {
+    fov = new_fov;
+    update_projection_matrix();
+  }
+
+  void set_aspect_ratio(float new_aspect_ratio) override;
+
+  void set_near_clip(float new_near_clip) override;
+
+  void set_far_clip(float new_far_clip) override;
 
   glm::vec3 get_position() const override { return position; }
   glm::vec3 get_rotation() const override { return rotation; }
@@ -91,22 +122,15 @@ class OrthographicCamera : public BaseCamera {
   float get_near_clip() const override { return near_clip; }
   float get_far_clip() const override { return far_clip; }
 
-  // Implement the missing functions
-  void move(const glm::vec3& offset) override { position += offset; }
+  void move(const glm::vec3& offset) override;
 
-  void rotate(const glm::vec3& offset) override { rotation += offset; }
+  void rotate(const glm::vec3& offset) override;
 
-  void update(float _) override {
-    glm::mat4 rotationMatrix = glm::rotate(
-        glm::mat4(1.0f), glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+ private:
+  void update_view_matrix();
 
-    glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), position);
-
-    // Calculate the updated view matrix (inverse of the camera transformation)
-    view_matrix = glm::inverse(translationMatrix * rotationMatrix);
-  }
+  void update_projection_matrix();
 };
-
 }  // namespace base
 }  // namespace kingom::engine
 

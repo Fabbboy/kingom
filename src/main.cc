@@ -1,21 +1,8 @@
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-
 #include <fstream>
 #include <glm/gtx/string_cast.hpp>
 #include <iostream>
-#include <sstream>
 
-#include "engine/buffer/buffer.hh"
-#include "engine/buffer/layout.hh"
-#include "engine/geometry/material.hh"
-#include "engine/geometry/mesh.hh"
-#include "engine/geometry/texture.hh"
-#include "engine/memory.hh"
-#include "engine/object/camera.hh"
-#include "engine/rendering/shader.hh"
-#include "engine/window/window.hh"
-#include "engine/window/window_desc.hh"
+#include "engine/engine.hh"
 
 using namespace kingom::engine;
 
@@ -126,34 +113,12 @@ int main() {
   Mesh mesh(make_box(layout), std::move(material));
 
   auto camera =
-      make_box<base::OrthographicCamera>(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f);
+      make_box<base::PerspectiveCamera>(45.0f, 800.0f / 600.0f, 0.1f, 100.0f);
+  camera->set_position(glm::vec3(0.0f, 0.0f, 3.0f));
 
   while (!window->should_close()) {
     window->poll_events();
     renderer->clear();
-
-    if (glfwGetKey(window->get_window(), GLFW_KEY_W) == GLFW_PRESS) {
-      camera->move(glm::vec3(0.0f, 0.01f, 0.0f));  // Move up
-    }
-    if (glfwGetKey(window->get_window(), GLFW_KEY_S) == GLFW_PRESS) {
-      camera->move(glm::vec3(0.0f, -0.01f, 0.0f));  // Move down
-    }
-    if (glfwGetKey(window->get_window(), GLFW_KEY_A) == GLFW_PRESS) {
-      camera->move(glm::vec3(-0.01f, 0.0f, 0.0f));  // Move left
-    }
-    if (glfwGetKey(window->get_window(), GLFW_KEY_D) == GLFW_PRESS) {
-      camera->move(glm::vec3(0.01f, 0.0f, 0.0f));  // Move right
-    }
-
-    if (glfwGetKey(window->get_window(), GLFW_KEY_Q) == GLFW_PRESS) {
-      camera->rotate(glm::vec3(0.0f, 0.0f, 1.0f));  // Rotate counter-clockwise
-    }
-    // Rotate camera clockwise (Z-axis rotation)
-    if (glfwGetKey(window->get_window(), GLFW_KEY_E) == GLFW_PRESS) {
-      camera->rotate(glm::vec3(0.0f, 0.0f, -1.0f));  // Rotate clockwise
-    }
-
-    camera->update(renderer->get_delta_time());
 
     glm::mat4 view = camera->get_view_matrix();
     glm::mat4 projection = camera->get_projection_matrix();
