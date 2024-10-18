@@ -34,6 +34,7 @@ class Shader {
       std::istream& vertex_shader, std::istream& fragment_shader);
 
   inline void use() { glUseProgram(program_id); }
+  inline void unuse() { glUseProgram(0); }
 
   void set_bool(const std::string& name, bool value);
   void set_int(const std::string& name, int value);

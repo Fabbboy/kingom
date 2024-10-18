@@ -3,40 +3,9 @@
 #include <iostream>
 
 #include "engine/engine.hh"
+#include "engine/geometry/material.hh"
 
 using namespace kingom::engine;
-
-class CustomMaterialData : public BaseMaterialData {
- public:
-  CustomMaterialData(glm::mat4 view, glm::mat4 projection)
-      : view(view), projection(projection) {}
-
-  glm::mat4 view;
-  glm::mat4 projection;
-};
-
-class CustomMaterial : public BaseMaterial {
- public:
-  CustomMaterial(Raw<Shader> shader, Raw<Texture> tex)
-      : shader(shader), tex(tex) {}
-
-  void bind(Ref<BaseMaterialData> data) override {
-    shader->use();
-    tex->bind(GL_TEXTURE0);
-    shader->set_int("texture1", 0);
-
-    auto custom_data = std::static_pointer_cast<CustomMaterialData>(data);
-    shader->set_mat4("view", custom_data->view);
-    shader->set_mat4("projection", custom_data->projection);
-    shader->set_mat4("model", glm::mat4(1.0f));
-  }
-
-  void unbind() override {}
-
- private:
-  Raw<Shader> shader;
-  Raw<Texture> tex;
-};
 
 int main() {
   auto result = kingom::engine::WindowDesc()
@@ -55,8 +24,8 @@ int main() {
   window->activate();
   auto renderer = window->get_renderer();
 
-  std::fstream vertex_file("../assets/codeScreen.vert");
-  std::fstream fragment_file("../assets/codeScreen.frag");
+  std::fstream vertex_file("../assets/albedo.vert");
+  std::fstream fragment_file("../assets/albedo.frag");
 
   auto ret_shader = Shader::create(vertex_file, fragment_file);
   if (ret_shader.is_err()) {
@@ -108,9 +77,11 @@ int main() {
     return -1;
   }
 
-  Box<BaseMaterial> material =
-      make_box<CustomMaterial>(shader.get(), tex.get());
-  Mesh mesh(make_box(layout), std::move(material));
+  Box<base::AlbedoMaterial> material =
+      make_box<base::AlbedoMaterial>(std::move(tex), glm::vec4(1.0f), 0.0f, 0.0f);
+
+  auto mesh =
+      make_box<Mesh>(make_box(layout), std::move(material), std::move(shader));
 
   auto camera =
       make_box<base::OrthographicCamera>(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f);
@@ -122,9 +93,9 @@ int main() {
     glm::mat4 view = camera->get_view_matrix();
     glm::mat4 projection = camera->get_projection_matrix();
 
-    std::cout << glm::to_string(view) << std::endl;
+    mesh->draw();
 
-    mesh.draw(make_box<CustomMaterialData>(view, projection));
+    std::cout << glm::to_string(view) << std::endl;
 
     renderer->swap();
   }

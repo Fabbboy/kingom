@@ -5,9 +5,9 @@
 #include <GLFW/glfw3.h>
 
 #include <glm/glm.hpp>
-#include "engine/memory.hh"
 #include <vector>
 
+#include "engine/memory.hh"
 #include "util/result.hh"
 
 namespace kingom::engine {
