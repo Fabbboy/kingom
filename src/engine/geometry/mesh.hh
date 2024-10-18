@@ -1,7 +1,7 @@
 #ifndef KINGOM_ENGINE_MESH_HH
 #define KINGOM_ENGINE_MESH_HH
 
-#include "engine/buffers/layout.hh"
+#include "engine/buffer/layout.hh"
 #include "engine/geometry/material.hh"
 
 namespace kingom::engine {
@@ -26,7 +26,7 @@ class Mesh {
        DrawMethod draw_method = DrawMethod::Triangle)
       : layout(std::move(layout)), material(std::move(material)), draw_method(draw_method) {}
 
-  void draw();
+  void draw(Ref<BaseMaterialData> data);
 };
 }  // namespace kingom::engine
 
