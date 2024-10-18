@@ -34,6 +34,10 @@ file(GLOB_RECURSE SOURCES "src/*.cc")
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
 
+if(WIN32)
+    add_definitions(-DGLM_ENABLE_EXPERIMENTAL)
+endif()
+
 add_executable(kingom ${SOURCES})
 
 if(DEFINED ENV{VCPKG_ROOT})

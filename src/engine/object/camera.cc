@@ -43,25 +43,14 @@ void OrthographicCamera::set_rotation(const glm::vec3& new_rotation) {
   update_view_matrix();
 }
 
-void OrthographicCamera::set_fov(float new_fov) {
-  fov = new_fov;
-  update_projection_matrix(-aspect_ratio * new_fov, aspect_ratio * new_fov,
-                           -new_fov, new_fov);
-}
-
-void OrthographicCamera::set_aspect_ratio(float new_aspect_ratio) {
-  aspect_ratio = new_aspect_ratio;
-  update_projection_matrix(-aspect_ratio * fov, aspect_ratio * fov, -fov, fov);
-}
-
 void OrthographicCamera::set_near_clip(float new_near_clip) {
   near_clip = new_near_clip;
-  update_projection_matrix(-aspect_ratio * fov, aspect_ratio * fov, -fov, fov);
+  update_projection_matrix(-1.0f, 1.0f, -1.0f, 1.0f);
 }
 
 void OrthographicCamera::set_far_clip(float new_far_clip) {
   far_clip = new_far_clip;
-  update_projection_matrix(-aspect_ratio * fov, aspect_ratio * fov, -fov, fov);
+  update_projection_matrix(-1.0f, 1.0f, -1.0f, 1.0f);
 }
 
 void OrthographicCamera::move(const glm::vec3& offset) {

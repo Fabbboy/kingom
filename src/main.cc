@@ -3,7 +3,6 @@
 #include <iostream>
 
 #include "engine/engine.hh"
-#include "engine/object/camera.hh"
 
 using namespace kingom::engine;
 
