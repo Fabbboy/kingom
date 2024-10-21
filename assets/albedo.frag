@@ -8,14 +8,14 @@ in vec2 texCoords;   // Texture coordinates
 // Uniforms for material properties
 struct Material {
   vec4 albedo_color;         // Base albedo color
-  sampler2D albedo_texture;  // Albedo texture (optional)
-  sampler2D ao_texture;      // Ambient occlusion texture (optional)
-  sampler2D normal_texture;  // Normal map (optional)
+  sampler2D albedo_texture;  // Albedo texture (required)
+  sampler2D ao_texture;      // Ambient occlusion texture (required)
+  sampler2D normal_texture;  // Normal map (required)
   float metallic;            // Metallic property
   float roughness;           // Roughness property
 };
 
-// Uniform to determine which textures to use
+// Uniform to determine which textures to use (can be ignored if everything is mandatory)
 struct UseTextures {
   int albedo_texture;
   int ao_texture;
@@ -23,10 +23,8 @@ struct UseTextures {
 };
 
 uniform Material material;
-uniform UseTextures use;
 
-// Lighting and view positions (you can expand this part for your lighting
-// model)
+// Lighting and view positions
 uniform vec3 lightPos;  // Light position in world space
 uniform vec3 viewPos;   // Camera/viewer position in world space
 
@@ -50,14 +48,11 @@ vec3 calculateLighting(vec3 normal, vec3 viewDir, vec3 lightDir) {
 }
 
 void main() {
-  // Fetch normal map if available
+  // Fetch normal map (required)
   vec3 normal = normalize(fragNormal);
-  if (use.normal_texture == 1) {
-    // Adjust the normal from the normal map (tangent-space normal)
-    vec3 tangentNormal =
-        texture(material.normal_texture, texCoords).xyz * 2.0 - 1.0;
-    normal = normalize(tangentNormal);  // Normalize the normal from texture
-  }
+  vec3 tangentNormal =
+      texture(material.normal_texture, texCoords).xyz * 2.0 - 1.0;
+  normal = normalize(tangentNormal);  // Normalize the normal from texture
 
   // View and light direction vectors
   vec3 viewDir = normalize(viewPos - fragPos);
@@ -66,17 +61,11 @@ void main() {
   // Calculate lighting (diffuse, specular)
   vec3 lighting = calculateLighting(normal, viewDir, lightDir);
 
-  // Fetch albedo color (use texture if available, otherwise use base color)
-  vec3 albedo = material.albedo_color.rgb;  // Default to albedo color
-  if (use.albedo_texture == 1) {
-    albedo = texture(material.albedo_texture, texCoords).rgb;
-  }
+  // Fetch albedo color (required)
+  vec3 albedo = texture(material.albedo_texture, texCoords).rgb;
 
-  // Apply Ambient Occlusion (if available)
-  float ao = 1.0;  // Default to no occlusion (full ambient)
-  if (use.ao_texture == 1) {
-    ao = texture(material.ao_texture, texCoords).r;
-  }
+  // Apply Ambient Occlusion (required)
+  float ao = texture(material.ao_texture, texCoords).r;
 
   // Final color = lighting * albedo * ambient occlusion
   vec3 finalColor = lighting * albedo * ao;

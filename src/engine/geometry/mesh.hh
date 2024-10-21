@@ -27,7 +27,7 @@ class Mesh {
        DrawMethod draw_method = DrawMethod::Triangle)
       : layout(std::move(layout)),
         material(material),
-        shader(std::move(shader)),
+        shader(shader),
         draw_method(draw_method) {}
 
   void draw();

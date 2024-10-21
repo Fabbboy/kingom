@@ -8,11 +8,8 @@
 using namespace kingom::engine;
 
 int main() {
-  auto result = kingom::engine::WindowDesc()
-                    .set_width(800)
-                    .set_height(600)
-
-                    .build();
+  auto result =
+      kingom::engine::WindowDesc().set_width(800).set_height(600).build();
 
   if (result.is_err()) {
     std::cerr << "Failed to create window: " << result.unwrap_err().what()
@@ -41,7 +38,7 @@ int main() {
               << std::endl;
     return -1;
   }
-  auto tex = tex_ret.unwrap();
+  Ref<Texture> tex = tex_ret.unwrap();
 
   std::vector<float> vertices = {
       // positions       // texture coords
@@ -77,8 +74,14 @@ int main() {
     return -1;
   }
 
+  glm::vec4 ao_color = glm::vec4(128, 128, 255, 1);
+  glm::vec4 normal_color = glm::vec4(255, 255, 255, 1);
+
+  Ref<Texture> ao_tex = Texture::create(ao_color).unwrap();
+  Ref<Texture> normal_tex = Texture::create(normal_color).unwrap();
+
   Ref<base::AlbedoMaterial> material = make_ref<base::AlbedoMaterial>(
-      std::move(tex), glm::vec4(1.0f), 0.0f, 0.0f);
+      tex, ao_tex, normal_tex, glm::vec4(1.0f), 0.0f, 0.0f);
 
   auto mesh = make_box<Mesh>(std::move(layout), material, shader);
 

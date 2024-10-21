@@ -20,15 +20,13 @@ class AlbedoMaterial : public BaseMaterial {
   float metallic;
   float roughness;
 
-  Ref<Texture> ao_teture = nullptr;
-  Ref<Texture> normal_texture = nullptr;
+  Ref<Texture> ao_teture;
+  Ref<Texture> normal_texture;
 
  public:
-  AlbedoMaterial(Ref<Texture> albedo_texture,
+  AlbedoMaterial(Ref<Texture> albedo_texture, Ref<Texture> ao_texture, Ref<Texture> normal_texture,
                  glm::vec4 albedo_color = glm::vec4(1.0f),
-                 float metallic = 0.0f, float roughness = 0.0f,
-                 Ref<Texture> ao_texture = nullptr,
-                 Ref<Texture> normal_texture = nullptr);
+                 float metallic = 0.0f, float roughness = 0.0f);
 
   inline void set_albedo_texture(Ref<Texture> new_texture) {
     albedo_texture = new_texture;
