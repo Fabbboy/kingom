@@ -62,26 +62,25 @@ int main() {
   kingom::engine::IndexBuffer index_buffer;
   index_buffer.set_data(indices.data(), indices.size());
 
-  kingom::engine::Layout layout;
-  layout.add_attribute(kingom::engine::VertexAttribute(
+  auto layout = make_box<Layout>();
+  layout->add_attribute(kingom::engine::VertexAttribute(
       3, kingom::engine::VertexAttributeType::FLOAT));
-  layout.add_attribute(kingom::engine::VertexAttribute(
+  layout->add_attribute(kingom::engine::VertexAttribute(
       2, kingom::engine::VertexAttributeType::FLOAT));
 
-  layout.attach(make_box(vertex_buffer), make_box(index_buffer));
+  layout->attach(make_box(vertex_buffer), make_box(index_buffer));
 
-  auto res = layout.build();
+  auto res = layout->build();
   if (res.is_err()) {
     std::cerr << "Failed to build layout: " << res.unwrap_err().what()
               << std::endl;
     return -1;
   }
 
-  Box<base::AlbedoMaterial> material =
-      make_box<base::AlbedoMaterial>(std::move(tex), glm::vec4(1.0f), 0.0f, 0.0f);
+  Ref<base::AlbedoMaterial> material = make_ref<base::AlbedoMaterial>(
+      std::move(tex), glm::vec4(1.0f), 0.0f, 0.0f);
 
-  auto mesh =
-      make_box<Mesh>(make_box(layout), std::move(material), std::move(shader));
+  auto mesh = make_box<Mesh>(std::move(layout), material, shader);
 
   auto camera =
       make_box<base::OrthographicCamera>(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f);
@@ -92,7 +91,10 @@ int main() {
 
     glm::mat4 view = camera->get_view_matrix();
     glm::mat4 projection = camera->get_projection_matrix();
-
+    shader->use();
+    shader->set_mat4("view", view);
+    shader->set_mat4("projection", projection);
+    shader->set_mat4("model", glm::mat4(1.0f));
     mesh->draw();
 
     std::cout << glm::to_string(view) << std::endl;

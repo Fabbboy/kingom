@@ -18,15 +18,15 @@ enum class DrawMethod {
 class Mesh {
  private:
   Box<Layout> layout;
-  Box<BaseMaterial> material;
+  Ref<BaseMaterial> material;
   Ref<Shader> shader;
   DrawMethod draw_method;
 
  public:
-  Mesh(Box<Layout> layout, Box<BaseMaterial> material, Ref<Shader> shader,
+  Mesh(Box<Layout> layout, Ref<BaseMaterial> material, Ref<Shader> shader,
        DrawMethod draw_method = DrawMethod::Triangle)
       : layout(std::move(layout)),
-        material(std::move(material)),
+        material(material),
         shader(std::move(shader)),
         draw_method(draw_method) {}
 
