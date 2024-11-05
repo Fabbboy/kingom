@@ -51,7 +51,7 @@ Shader::~Shader() {
 }
 util::Result<ShaderPtr, std::exception> Shader::create(
     std::string vertex_shader, std::string fragment_shader) {
-  ShaderPtr shader = make_box<Shader>();
+  ShaderPtr shader = make_ref<Shader>();
   shader->program_id = glCreateProgram();
   shader->vertex_id = glCreateShader(GL_VERTEX_SHADER);
   shader->fragment_id = glCreateShader(GL_FRAGMENT_SHADER);
@@ -71,7 +71,7 @@ util::Result<ShaderPtr, std::exception> Shader::create(
     return util::Result<ShaderPtr, std::exception>::Err(result.unwrap_err());
   }
 
-  return util::Result<ShaderPtr, std::exception>::Ok(std::move(shader));
+  return util::Result<ShaderPtr, std::exception>::Ok(shader);
 };
 
 util::Result<ShaderPtr, std::exception> Shader::create(

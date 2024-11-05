@@ -18,15 +18,19 @@ enum class DrawMethod {
 class Mesh {
  private:
   Box<Layout> layout;
-  Box<BaseMaterial> material;
+  Ref<BaseMaterial> material;
+  Ref<Shader> shader;
   DrawMethod draw_method;
 
  public:
-  Mesh(Box<Layout> layout, Box<BaseMaterial> material,
+  Mesh(Box<Layout> layout, Ref<BaseMaterial> material, Ref<Shader> shader,
        DrawMethod draw_method = DrawMethod::Triangle)
-      : layout(std::move(layout)), material(std::move(material)), draw_method(draw_method) {}
+      : layout(std::move(layout)),
+        material(material),
+        shader(shader),
+        draw_method(draw_method) {}
 
-  void draw(Ref<BaseMaterialData> data);
+  void draw();
 };
 }  // namespace kingom::engine
 
