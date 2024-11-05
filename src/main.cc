@@ -14,6 +14,7 @@ struct BasicMaterial : public BaseMaterial  {
   void apply(Ref<Shader> shader) override  {
     shader->use();
     tex->bind(GL_TEXTURE0);
+    shader->set_int("texture1", 0);
   }
 };
 
