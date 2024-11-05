@@ -23,6 +23,8 @@ class Shader {
 
   inline bool isActive(unsigned int id) { return glIsShader(id) == GL_TRUE; };
 
+  bool isThis();
+
  public:
   Shader() = default;
   ~Shader();
@@ -33,7 +35,7 @@ class Shader {
   static util::Result<Ref<Shader>, std::exception> create(
       std::istream& vertex_shader, std::istream& fragment_shader);
 
-  inline void use() { glUseProgram(program_id); }
+  inline void use() { if(!isThis()) { glUseProgram(program_id); } }
   inline void unuse() { glUseProgram(0); }
 
   void set_bool(const std::string& name, bool value);

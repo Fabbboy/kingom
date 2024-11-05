@@ -84,6 +84,16 @@ util::Result<ShaderPtr, std::exception> Shader::create(
   return create(vertex_src, fragment_src);
 };
 
+bool Shader::isThis() {
+  GLint currProg = 0;
+  glGetIntegerv(GL_CURRENT_PROGRAM, &currProg);
+  if(currProg == program_id) {
+    return true;
+  }
+
+  return false;
+};
+
 void Shader::set_bool(const std::string& name, bool value) {
   glUniform1i(glGetUniformLocation(program_id, name.c_str()), (int)value);
 };
