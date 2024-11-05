@@ -10,6 +10,9 @@ I implemented what I said at the top but encountered the issue that in order to 
 - Put essential rendering steps in the `BasePipeline` and just require the user to have this
 - Make `DefaultPipeline` extremly minimal/abstract and require the user to implement it but at this point we could directly use `BasePipeline` but maybe someone also has its own custom rendering system so yea needs to be dicussed
 
+After about 10 seconds of thinking:
+I guess we remove DefaultPipeline and use BasePipeline using protected attributes and then when I'm building my own game I'm going to see if iu need it or not :). If you reading this need something like this open a Issue.
+
 ### Build
 It should built on Linux, Macos and Windows. If not, please open an issue. You have two options to build it:
 1. The project provides a `vcpkg.json` file. This includes everything you need to build the project. Just download the vcpkg tool.
