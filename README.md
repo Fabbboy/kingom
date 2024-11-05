@@ -13,6 +13,15 @@ I implemented what I said at the top but encountered the issue that in order to 
 After about 10 seconds of thinking:
 I guess we remove DefaultPipeline and use BasePipeline using protected attributes and then when I'm building my own game I'm going to see if iu need it or not :). If you reading this need something like this open a Issue.
 
+Update:
+I moved all the items to the `BasePipeline` add getters and setters but made them all virtual so you could potentially override them or take them out completly if you need to. 
+
+Next steps:
+- Check if all components work together
+- Add state to the `BasePipeline` for example if the shader is already mounted
+- implement the actual `render` function
+- rewrite main to use the pipeline
+
 ### Build
 It should built on Linux, Macos and Windows. If not, please open an issue. You have two options to build it:
 1. The project provides a `vcpkg.json` file. This includes everything you need to build the project. Just download the vcpkg tool.
