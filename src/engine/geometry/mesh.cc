@@ -10,4 +10,7 @@ void Mesh::draw() {
   layout->unbind();
   shader->unuse();
 }
+void Mesh::step(BasePipeline* pipeline) {
+  glDrawElements(static_cast<GLenum>(draw_method), pipeline->layout->get_count(), GL_UNSIGNED_INT, nullptr);
+}
 }  // namespace kingom::engine

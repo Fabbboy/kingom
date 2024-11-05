@@ -16,6 +16,9 @@ struct BasicMaterial : public BaseMaterial  {
     tex->bind(GL_TEXTURE0);
     shader->set_int("texture1", 0);
   }
+  void step(BasePipeline* pipeline) override {
+
+  }
 };
 
 int main() {

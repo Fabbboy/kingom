@@ -7,9 +7,10 @@
 #include "engine/buffer/vattribute.hh"
 #include "engine/memory.hh"
 #include "util/result.hh"
+#include "engine/rendering/pipeline.hh"
 
 namespace kingom::engine {
-class Layout {
+class Layout : public PipelineItem {
  private:
   GLuint id = GL_NONE;
   GLuint offset;
@@ -39,6 +40,7 @@ class Layout {
   util::Result<void, std::exception> build();
   inline void bind() const { glBindVertexArray(id); }
   inline void unbind() const { glBindVertexArray(0); }
+  void step(BasePipeline* pipeline) { bind(); }
 
   inline GLuint get_id() const { return id; }
   inline GLuint get_offset() const { return offset; }

@@ -3,6 +3,7 @@
 
 #include "engine/buffer/layout.hh"
 #include "engine/geometry/material.hh"
+#include "engine/rendering/pipeline.hh"
 
 namespace kingom::engine {
 enum class DrawMethod {
@@ -15,7 +16,7 @@ enum class DrawMethod {
   Point = GL_POINTS
 };
 
-class Mesh {
+class Mesh : public PipelineItem {
  private:
   Box<Layout> layout;
   Ref<BaseMaterial> material;
@@ -31,6 +32,7 @@ class Mesh {
         draw_method(draw_method) {}
 
   void draw();
+  void step(BasePipeline* pipeline) override;
 };
 }  // namespace kingom::engine
 
