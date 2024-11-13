@@ -84,45 +84,69 @@ util::Result<ShaderPtr, std::exception> Shader::create(
   return create(vertex_src, fragment_src);
 };
 
-bool Shader::isThis() {
-  GLint currProg = 0;
-  glGetIntegerv(GL_CURRENT_PROGRAM, &currProg);
-  if(currProg == program_id) {
-    return true;
-  }
-
-  return false;
-};
-
 void Shader::set_bool(const std::string& name, bool value) {
-  glUniform1i(glGetUniformLocation(program_id, name.c_str()), (int)value);
+  pipeline.bools[name] = value;
 };
 void Shader::set_int(const std::string& name, int value) {
-  glUniform1i(glGetUniformLocation(program_id, name.c_str()), value);
+  pipeline.ints[name] = value;
 };
 void Shader::set_float(const std::string& name, float value) {
-  glUniform1f(glGetUniformLocation(program_id, name.c_str()), value);
+  pipeline.floats[name] = value;
 };
 void Shader::set_vec2(const std::string& name, const glm::vec2& value) {
-  glUniform2fv(glGetUniformLocation(program_id, name.c_str()), 1, &value[0]);
+  pipeline.vec2s[name] = value;
 };
 void Shader::set_vec3(const std::string& name, const glm::vec3& value) {
-  glUniform3fv(glGetUniformLocation(program_id, name.c_str()), 1, &value[0]);
+  pipeline.vec3s[name] = value;
 };
 void Shader::set_vec4(const std::string& name, const glm::vec4& value) {
-  glUniform4fv(glGetUniformLocation(program_id, name.c_str()), 1, &value[0]);
+  pipeline.vec4s[name] = value;
 };
 void Shader::set_mat2(const std::string& name, const glm::mat2& value) {
-  glUniformMatrix2fv(glGetUniformLocation(program_id, name.c_str()), 1,
-                     GL_FALSE, &value[0][0]);
+  pipeline.mat2s[name] = value;
 };
 void Shader::set_mat3(const std::string& name, const glm::mat3& value) {
-  glUniformMatrix3fv(glGetUniformLocation(program_id, name.c_str()), 1,
-                     GL_FALSE, &value[0][0]);
+  pipeline.mat3s[name] = value;
 };
 void Shader::set_mat4(const std::string& name, const glm::mat4& value) {
-  glUniformMatrix4fv(glGetUniformLocation(program_id, name.c_str()), 1,
-                     GL_FALSE, &value[0][0]);
+  pipeline.mat4s[name] = value;
+};
+
+void ShaderPipeline::apply(Ref<Shader> shader) {
+  shader->use();
+  for (auto& [name, value] : bools) {
+    glUniform1i(glGetUniformLocation(shader->get_id(), name.c_str()), value);
+  }
+  for (auto& [name, value] : ints) {
+    glUniform1i(glGetUniformLocation(shader->get_id(), name.c_str()), value);
+  }
+  for (auto& [name, value] : floats) {
+    glUniform1f(glGetUniformLocation(shader->get_id(), name.c_str()), value);
+  }
+  for (auto& [name, value] : vec2s) {
+    glUniform2fv(glGetUniformLocation(shader->get_id(), name.c_str()), 1,
+                 &value[0]);
+  }
+  for (auto& [name, value] : vec3s) {
+    glUniform3fv(glGetUniformLocation(shader->get_id(), name.c_str()), 1,
+                 &value[0]);
+  }
+  for (auto& [name, value] : vec4s) {
+    glUniform4fv(glGetUniformLocation(shader->get_id(), name.c_str()), 1,
+                 &value[0]);
+  }
+  for (auto& [name, value] : mat2s) {
+    glUniformMatrix2fv(glGetUniformLocation(shader->get_id(), name.c_str()), 1,
+                       GL_FALSE, &value[0][0]);
+  }
+  for (auto& [name, value] : mat3s) {
+    glUniformMatrix3fv(glGetUniformLocation(shader->get_id(), name.c_str()), 1,
+                       GL_FALSE, &value[0][0]);
+  }
+  for (auto& [name, value] : mat4s) {
+    glUniformMatrix4fv(glGetUniformLocation(shader->get_id(), name.c_str()), 1,
+                       GL_FALSE, &value[0][0]);
+  }
 };
 
 }  // namespace kingom::engine

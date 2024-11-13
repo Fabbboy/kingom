@@ -98,13 +98,10 @@ int main() {
 
     glm::mat4 view = camera->get_view_matrix();
     glm::mat4 projection = camera->get_projection_matrix();
-    shader->use();
     shader->set_mat4("view", view);
     shader->set_mat4("projection", projection);
     shader->set_mat4("model", glm::mat4(1.0f));
     mesh->draw();
-
-    std::cout << glm::to_string(view) << std::endl;
 
     renderer->swap();
   }

@@ -6,15 +6,33 @@
 
 #include <glm/glm.hpp>
 #include <string>
+#include <unordered_map>
 
 #include "engine/memory.hh"
 #include "util/result.hh"
 
 namespace kingom::engine {
+class Shader;
+
+struct ShaderPipeline {
+  std::unordered_map<std::string, bool> bools;
+  std::unordered_map<std::string, int> ints;
+  std::unordered_map<std::string, float> floats;
+  std::unordered_map<std::string, glm::vec2> vec2s;
+  std::unordered_map<std::string, glm::vec3> vec3s;
+  std::unordered_map<std::string, glm::vec4> vec4s;
+  std::unordered_map<std::string, glm::mat2> mat2s;
+  std::unordered_map<std::string, glm::mat3> mat3s;
+  std::unordered_map<std::string, glm::mat4> mat4s;
+
+  void apply(Ref<Shader> shader);
+};
+
 class Shader {
  private:
   unsigned int program_id;
   unsigned int vertex_id, fragment_id;
+  ShaderPipeline pipeline;
 
  private:
   util::Result<void, std::exception> compile_shader(unsigned int id,
@@ -22,8 +40,6 @@ class Shader {
   util::Result<void, std::exception> link_program();
 
   inline bool isActive(unsigned int id) { return glIsShader(id) == GL_TRUE; };
-
-  bool isThis();
 
  public:
   Shader() = default;
@@ -35,7 +51,7 @@ class Shader {
   static util::Result<Ref<Shader>, std::exception> create(
       std::istream& vertex_shader, std::istream& fragment_shader);
 
-  inline void use() { if(!isThis()) { glUseProgram(program_id); } }
+  inline void use() { glUseProgram(program_id); }
   inline void unuse() { glUseProgram(0); }
 
   void set_bool(const std::string& name, bool value);
@@ -49,6 +65,7 @@ class Shader {
   void set_mat4(const std::string& name, const glm::mat4& value);
 
   inline unsigned int get_id() { return program_id; }
+  inline ShaderPipeline& get_pipeline() { return pipeline; }
 };
 typedef Ref<Shader> ShaderPtr;
 }  // namespace kingom::engine
