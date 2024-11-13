@@ -115,8 +115,9 @@ util::Result<Ref<Window>, std::exception> Window::init(const WindowDesc& desc) {
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
   window->renderer = make_ref<Renderer>(window);
+  window->input = make_ref<Input>(window);
   window->callback_data =
-      make_ref<internal::CallbackData>(window, window->renderer);
+      make_ref<internal::CallbackData>(window, window->renderer, window->input);
 
   glfwSetWindowUserPointer(window->window, window->callback_data.get());
   glViewport(0, 0, desc.width, desc.height);
@@ -125,5 +126,7 @@ util::Result<Ref<Window>, std::exception> Window::init(const WindowDesc& desc) {
 }
 
 Ref<Renderer> Window::get_renderer() { return renderer; }
+
+Ref<Input> Window::get_input() { return input; }
 
 }  // namespace kingom::engine

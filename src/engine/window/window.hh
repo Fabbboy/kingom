@@ -6,6 +6,7 @@
 
 #include <vector>
 
+#include "engine/input/input.hh"
 #include "engine/internal/callback.hh"
 #include "engine/rendering/renderer.hh"
 #include "util/result.hh"
@@ -23,6 +24,7 @@ class Window {
   GLFWmonitor* monitor;
   Ref<internal::CallbackData> callback_data;
   Ref<Renderer> renderer;
+  Ref<Input> input;
 
  private:
   void apply_hints();
@@ -41,6 +43,7 @@ class Window {
   static util::Result<Ref<Window>, std::exception> init(const WindowDesc& desc);
 
   Ref<Renderer> get_renderer();
+  Ref<Input> get_input();
 
   void activate();
 
